@@ -1,7 +1,4 @@
-import { useState } from "react";
-
 export default function GameBlock({ value }) {
-    const [tile, setTile] = useState( value );  
     
     const activeBlockStyle = {
         backgroundColor: '#18122B'
