@@ -4,10 +4,10 @@ import Row from "../components/row";
 export default function HomeView() {
 
 
-    const [gameMatrix, setGameMatrix] = useState([[2, 0, 2, 0],
-                                                  [2, 2, 4, 8],
-                                                  [8, 0, 0, 8],
-                                                  [0, 8, 0, 8]]);                          
+    const [gameMatrix, setGameMatrix] = useState([[0, 2, 2, 0],
+                                                  [0, 4, 0, 4],
+                                                  [8, 0, 8, 8],
+                                                  [2, 2, 0, 4]]);                          
     
     function handleKeyPress(event) {
         if(event.keyCode == 37){
@@ -26,7 +26,12 @@ export default function HomeView() {
         gameBoard = gameBoard.slice();
         for (let i=0; i < gameBoard.length; i++) {
             filterZeroValues(gameBoard[i], 'left') ;
-            for (let j=gameBoard[i].length; j > 0; j--) {
+            for (let j=0; j < gameBoard[i].length; j++) {
+                if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j+1]) {
+                    gameBoard[i][j] = gameBoard[i][j] * 2
+                    gameBoard[i].splice(j+1, 1);
+                    gameBoard[i].push(0);
+                 } 
             }
         }
         return gameBoard;
@@ -42,24 +47,33 @@ export default function HomeView() {
         for (let i=0; i < gameBoard.length; i++) {
             filterZeroValues(gameBoard[i], 'right') ;
             for (let j=gameBoard[i].length; j > 0; j--) {
+                if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j-1]) {
+                    gameBoard[i][j] = gameBoard[i][j] * 2
+                    gameBoard[i].splice(j-1, 1);
+                    gameBoard[i].unshift(0);
+                 }
             }
         }
         return gameBoard;
     }
 
     function filterZeroValues(row, direction) {
-        console.log('Row Input: ', row);
-        let zeroDetection = false;
-        for (let i=row.length - 1; i >= 0; i--) {
-            if (row[i] == 0) {
-                row.splice(i, 1) 
-                row.push(0);
-                zeroDetection = true;
+        if (direction == 'left'){
+            for (let i=row.length - 1; i >= 0; i--) {
+                if (row[i] == 0) {
+                    row.splice(i, 1) 
+                    row.push(0);
+                }
             }
-            if (i == 0 && !zeroDetection) {return(row)}
         }
-
-        if (direction == 'right') { row.reverse() }
+        else if (direction == 'right') { 
+            for (let i= 0; i < row.length; i++) {
+                if (row[i] == 0) {
+                    row.splice(i, 1);
+                    row.unshift(0);
+                }
+            }
+        }
 
         return (row);
     }
