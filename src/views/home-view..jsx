@@ -4,14 +4,14 @@ import Row from "../components/row";
 export default function HomeView() {
 
 
-    const [gameMatrix, setGameMatrix] = useState([[2, 0, 0, 2],
+    const [gameMatrix, setGameMatrix] = useState([[2, 0, 2, 0],
                                                   [2, 2, 4, 8],
                                                   [8, 0, 0, 8],
                                                   [0, 8, 0, 8]]);                          
     
     function handleKeyPress(event) {
         if(event.keyCode == 37){
-            onKeyLeft();
+            setGameMatrix(onKeyLeft(gameMatrix));
         } else if(event.keyCode == 38) {
             onKeyUp();
         } else if(event.keyCode == 39) {
@@ -21,8 +21,15 @@ export default function HomeView() {
         }   
     }
 
-    function onKeyLeft() {
+    function onKeyLeft(gameBoard) {
         console.log('Left Key Press');
+        gameBoard = gameBoard.slice();
+        for (let i=0; i < gameBoard.length; i++) {
+            filterZeroValues(gameBoard[i], 'left') ;
+            for (let j=gameBoard[i].length; j > 0; j--) {
+            }
+        }
+        return gameBoard;
     }
 
     function onKeyUp() {
@@ -33,43 +40,28 @@ export default function HomeView() {
         console.log('Right Key Press');
         gameBoard = gameBoard.slice();
         for (let i=0; i < gameBoard.length; i++) {
+            filterZeroValues(gameBoard[i], 'right') ;
             for (let j=gameBoard[i].length; j > 0; j--) {
-                if (gameBoard[i][j] > 0) {
-                    if (gameBoard[i][j-1] == 0) {
-                        let row = gameBoard[i].slice(0, j);
-                        gameBoard[i].splice(0, j, ...removeEmptyValues(row));
-
-                    } 
-                    if (gameBoard[i][j] == gameBoard[i][j-1]){
-                        gameBoard[i][j] = gameBoard[i][j] * 2;
-                        gameBoard[i][j-1] = 0;
-
-                        let row = gameBoard[i].slice(0, j);
-                        gameBoard[i].splice(0, j, ...shiftRow('right', row));
-                    }
-                }  
             }
         }
         return gameBoard;
     }
 
-    function removeEmptyValues(row) {
-        console.log('Row Start: ', row);
-        let position = row.length - 1;
+    function filterZeroValues(row, direction) {
+        console.log('Row Input: ', row);
+        let zeroDetection = false;
         for (let i=row.length - 1; i >= 0; i--) {
-            if (row[i] > 0) {
-                row.splice(position, 1, row[i]);
-                row.splice(i, 1, 0);
-                position --;
+            if (row[i] == 0) {
+                row.splice(i, 1) 
+                row.push(0);
+                zeroDetection = true;
             }
+            if (i == 0 && !zeroDetection) {return(row)}
         }
-        return row;
-    }
 
-    function shiftRow(direction, row) {
-        row.unshift(0);
-        row.pop();
-        return row
+        if (direction == 'right') { row.reverse() }
+
+        return (row);
     }
 
     function onKeyDown() {
