@@ -1,85 +1,61 @@
 import { useState, useEffect } from "react";
 import Row from "../components/row";
+import { rotate, handleTileMerge } from "../game-functions/game-functions";
 
 export default function HomeView() {
 
 
-    const [gameMatrix, setGameMatrix] = useState([[0, 2, 2, 0],
-                                                  [0, 4, 0, 4],
-                                                  [8, 0, 8, 8],
-                                                  [2, 2, 0, 4]]);                          
+    const [gameMatrix, setGameMatrix] = useState([[2, 0, 2, 2],
+                                                  [0, 2, 0, 2],
+                                                  [0, 4, 4, 0],
+                                                  [4, 0, 4, 4]]);                          
     
     function handleKeyPress(event) {
         if(event.keyCode == 37){
             setGameMatrix(onKeyLeft(gameMatrix));
         } else if(event.keyCode == 38) {
-            onKeyUp();
+            setGameMatrix(onKeyUp(gameMatrix));
         } else if(event.keyCode == 39) {
             setGameMatrix(onKeyRight(gameMatrix));
         } else if(event.keyCode == 40) {
-            onKeyDown();
+            setGameMatrix(onKeyDown(gameMatrix));
         }   
     }
 
     function onKeyLeft(gameBoard) {
-        console.log('Left Key Press');
-        gameBoard = gameBoard.slice();
-        for (let i=0; i < gameBoard.length; i++) {
-            filterZeroValues(gameBoard[i], 'left') ;
-            for (let j=0; j < gameBoard[i].length; j++) {
-                if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j+1]) {
-                    gameBoard[i][j] = gameBoard[i][j] * 2
-                    gameBoard[i].splice(j+1, 1);
-                    gameBoard[i].push(0);
-                 } 
-            }
-        }
+
+        gameBoard = [...gameBoard];
+        gameBoard = handleTileMerge(gameBoard, 'left');
+
         return gameBoard;
     }
 
-    function onKeyUp() {
-        console.log('Up Key Press');
+    function onKeyUp(gameBoard) {
+
+        gameBoard = [...gameBoard];
+        gameBoard = rotate(gameBoard, 'clockwise');
+        gameBoard = handleTileMerge(gameBoard, 'right');
+        gameBoard = rotate(gameBoard, 'counterClockwise');
+
+        return gameBoard;
     }
 
     function onKeyRight(gameBoard) {
-        console.log('Right Key Press');
-        gameBoard = gameBoard.slice();
-        for (let i=0; i < gameBoard.length; i++) {
-            filterZeroValues(gameBoard[i], 'right') ;
-            for (let j=gameBoard[i].length; j > 0; j--) {
-                if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j-1]) {
-                    gameBoard[i][j] = gameBoard[i][j] * 2
-                    gameBoard[i].splice(j-1, 1);
-                    gameBoard[i].unshift(0);
-                 }
-            }
-        }
+
+        gameBoard = [...gameBoard];
+        gameBoard = handleTileMerge(gameBoard, 'right');
+
         return gameBoard;
     }
 
-    function filterZeroValues(row, direction) {
-        if (direction == 'left'){
-            for (let i=row.length - 1; i >= 0; i--) {
-                if (row[i] == 0) {
-                    row.splice(i, 1) 
-                    row.push(0);
-                }
-            }
-        }
-        else if (direction == 'right') { 
-            for (let i= 0; i < row.length; i++) {
-                if (row[i] == 0) {
-                    row.splice(i, 1);
-                    row.unshift(0);
-                }
-            }
-        }
+    function onKeyDown(gameBoard) {
 
-        return (row);
-    }
+        gameBoard = [...gameBoard];
+        gameBoard = rotate(gameBoard, 'clockwise');
+        gameBoard = handleTileMerge(gameBoard, 'left');
+        gameBoard = rotate(gameBoard, 'counterClockwise');
 
-    function onKeyDown() {
-        console.log('Down Key Press');
+        return gameBoard;
     }
 
     useEffect(() => {
