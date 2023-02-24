@@ -82,3 +82,25 @@ export function handleTileMerge(gameBoard, direction) {
 
     return gameBoard;
 }
+
+export function generateNewTile(gameBoard) {
+    let zeroIndices = []
+
+    for (let i=0; i < gameBoard.length; i++) {
+        for (let j=0; j <gameBoard[i].length; j++) {
+            if (gameBoard[i][j] === 0) { zeroIndices.push([i, j]) }
+        }
+    }
+
+    if (zeroIndices.length == 0) { return gameOver() }
+
+    else {
+        let newTileIndex = Math.floor(Math.random() * zeroIndices.length)
+        gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
+    }
+
+}
+
+function gameOver() {
+    console.log('Game Over');
+}

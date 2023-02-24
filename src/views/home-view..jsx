@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
 import Row from "../components/row";
-import { rotate, handleTileMerge } from "../game-functions/game-functions";
+import { rotate, handleTileMerge, generateNewTile } from "../game-functions/game-functions";
 
 export default function HomeView() {
 
 
-    const [gameMatrix, setGameMatrix] = useState([[2, 0, 2, 2],
-                                                  [0, 2, 0, 2],
-                                                  [0, 4, 4, 0],
-                                                  [4, 0, 4, 4]]);                          
+    const [gameMatrix, setGameMatrix] = useState([[0, 0, 0, 0],
+                                                  [0, 0, 0, 0],
+                                                  [0, 0, 0, 0],
+                                                  [0, 0, 0, 0]]);                          
     
     function handleKeyPress(event) {
+
         if(event.keyCode == 37){
             setGameMatrix(onKeyLeft(gameMatrix));
-        } else if(event.keyCode == 38) {
+        } 
+        
+        else if(event.keyCode == 38) {
             setGameMatrix(onKeyUp(gameMatrix));
-        } else if(event.keyCode == 39) {
+        } 
+        
+        else if(event.keyCode == 39) {
             setGameMatrix(onKeyRight(gameMatrix));
-        } else if(event.keyCode == 40) {
+        } 
+        
+        else if(event.keyCode == 40) {
             setGameMatrix(onKeyDown(gameMatrix));
         }   
     }
@@ -26,6 +33,7 @@ export default function HomeView() {
 
         gameBoard = [...gameBoard];
         gameBoard = handleTileMerge(gameBoard, 'left');
+        generateNewTile(gameBoard);
 
         return gameBoard;
     }
@@ -36,6 +44,7 @@ export default function HomeView() {
         gameBoard = rotate(gameBoard, 'clockwise');
         gameBoard = handleTileMerge(gameBoard, 'right');
         gameBoard = rotate(gameBoard, 'counterClockwise');
+        generateNewTile(gameBoard);
 
         return gameBoard;
     }
@@ -44,6 +53,7 @@ export default function HomeView() {
 
         gameBoard = [...gameBoard];
         gameBoard = handleTileMerge(gameBoard, 'right');
+        generateNewTile(gameBoard);
 
         return gameBoard;
     }
@@ -54,6 +64,7 @@ export default function HomeView() {
         gameBoard = rotate(gameBoard, 'clockwise');
         gameBoard = handleTileMerge(gameBoard, 'left');
         gameBoard = rotate(gameBoard, 'counterClockwise');
+        generateNewTile(gameBoard);
 
         return gameBoard;
     }
