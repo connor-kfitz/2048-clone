@@ -52,38 +52,39 @@ function filterZeroValues(row, direction) {
     return (row);
 }
 
-export function handleTileMerge(gameBoard, direction) {
+export function handleTileMerge(input, direction) {
 
     if (direction === 'right') {
-        for (let i=0; i < gameBoard.length; i++) {
-            filterZeroValues(gameBoard[i], 'right') ;
-            for (let j=gameBoard[i].length; j > 0; j--) {
-                if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j-1]) {
-                    gameBoard[i][j] = gameBoard[i][j] * 2
-                    gameBoard[i].splice(j-1, 1);
-                    gameBoard[i].unshift(0);
+        for (let i=0; i < input.length; i++) {
+            filterZeroValues(input[i], 'right') ;
+            for (let j=input[i].length; j > 0; j--) {
+                if (input[i][j] > 0 && input[i][j] == input[i][j-1]) {
+                    input[i][j] = input[i][j] * 2
+                    input[i].splice(j-1, 1);
+                    input[i].unshift(0);
                 }
             }
         }
     } 
     
     else if (direction === 'left') {
-        for (let i=0; i < gameBoard.length; i++) {
-            filterZeroValues(gameBoard[i], 'left') ;
-            for (let j=0; j < gameBoard[i].length; j++) {
-                if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j+1]) {
-                    gameBoard[i][j] = gameBoard[i][j] * 2
-                    gameBoard[i].splice(j+1, 1);
-                    gameBoard[i].push(0);
+        for (let i=0; i < input.length; i++) {
+            filterZeroValues(input[i], 'left') ;
+            for (let j=0; j < input[i].length; j++) {
+                if (input[i][j] > 0 && input[i][j] == input[i][j+1]) {
+                    input[i][j] = input[i][j] * 2
+                    input[i].splice(j+1, 1);
+                    input[i].push(0);
                  } 
             }
         }
     }
 
-    return gameBoard;
+    return input;
 }
 
 export function generateNewTile(gameBoard) {
+
     let zeroIndices = []
 
     for (let i=0; i < gameBoard.length; i++) {
@@ -92,15 +93,55 @@ export function generateNewTile(gameBoard) {
         }
     }
 
-    if (zeroIndices.length == 0) { return gameOver() }
+    let newTileIndex = Math.floor(Math.random() * zeroIndices.length)
 
-    else {
-        let newTileIndex = Math.floor(Math.random() * zeroIndices.length)
-        gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
-    }
-
+    return gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
 }
 
-function gameOver() {
-    console.log('Game Over');
+export function checkBoard(gameBoard) {
+
+    for (let i=0; i < gameBoard.length; i++) {
+        for (let j=0; j < gameBoard[i].length; j++) {
+            if (gameBoard[i][j] == 0) { 
+                return false 
+            }
+        }
+    }
+
+    return true
+}
+
+export function checkGameOver(gameBoard) {
+    
+    console.log('Check Game Over');
+
+    for (let i=0; i < gameBoard.length; i++) {
+        for (let j=0; j < gameBoard[i].length; j++) {
+            if (i < gameBoard.length - 1 && j < gameBoard[i].length - 1) {
+                // console.log(i, " ", j)
+                if (gameBoard[i][j] == (gameBoard[i][j+1] || gameBoard[i+1][j])) { 
+                    console.log(gameBoard[i][j], gameBoard[i][j+1]);
+                    console.log('More Room');
+                    return false 
+                }
+            }
+            else if (j == gameBoard[i].length - 1 && i < gameBoard.length -1) {
+                // console.log(gameBoard[i][j], " ", gameBoard[[i][j]]);
+                if (gameBoard[i][j] == gameBoard[i+1][j]) {
+                    console.log('More Room');
+                    return false 
+                }
+            }
+            else if (i == gameBoard.length - 1 && j < gameBoard[i].length -1) {
+                if (gameBoard[i][j] == gameBoard[i][j+1]) {
+                    console.log('More Room');
+                    return false 
+                }
+            }
+        }
+    }
+
+    console.log('Game Over!');
+    
+    return true;
 }

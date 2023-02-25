@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import Row from "../components/row";
-import { rotate, handleTileMerge, generateNewTile } from "../game-functions/game-functions";
+import { rotate, handleTileMerge, generateNewTile, checkGameOver, checkBoard } from "../game-functions/game-functions";
 
 export default function HomeView() {
 
 
-    const [gameMatrix, setGameMatrix] = useState([[0, 0, 0, 0],
-                                                  [0, 0, 0, 0],
-                                                  [0, 0, 0, 0],
-                                                  [0, 0, 0, 0]]);                          
+    const [gameMatrix, setGameMatrix] = useState([[0, 0, 4, 2],
+                                                  [14, 13, 12, 2],
+                                                  [15, 16, 17, 19],
+                                                  [22, 20, 18, 18]]);                          
     
     function handleKeyPress(event) {
 
@@ -32,8 +32,15 @@ export default function HomeView() {
     function onKeyLeft(gameBoard) {
 
         gameBoard = [...gameBoard];
-        gameBoard = handleTileMerge(gameBoard, 'left');
-        generateNewTile(gameBoard);
+        handleTileMerge(gameBoard, 'left');
+
+        if (checkBoard(gameBoard)) {
+            console.log('Full');
+            checkGameOver(gameBoard);
+        } else { 
+            console.log('Room') 
+            generateNewTile(gameBoard);
+        }
 
         return gameBoard;
     }
@@ -44,7 +51,14 @@ export default function HomeView() {
         gameBoard = rotate(gameBoard, 'clockwise');
         gameBoard = handleTileMerge(gameBoard, 'right');
         gameBoard = rotate(gameBoard, 'counterClockwise');
-        generateNewTile(gameBoard);
+
+        if (checkBoard(gameBoard)) {
+            console.log('Full');
+            checkGameOver(gameBoard);
+        } else { 
+            console.log('Room') 
+            generateNewTile(gameBoard);
+        }
 
         return gameBoard;
     }
@@ -53,7 +67,14 @@ export default function HomeView() {
 
         gameBoard = [...gameBoard];
         gameBoard = handleTileMerge(gameBoard, 'right');
-        generateNewTile(gameBoard);
+
+        if (checkBoard(gameBoard)) {
+            console.log('Full');
+            checkGameOver(gameBoard);
+        } else { 
+            console.log('Room') 
+            generateNewTile(gameBoard);
+        }
 
         return gameBoard;
     }
@@ -64,7 +85,14 @@ export default function HomeView() {
         gameBoard = rotate(gameBoard, 'clockwise');
         gameBoard = handleTileMerge(gameBoard, 'left');
         gameBoard = rotate(gameBoard, 'counterClockwise');
-        generateNewTile(gameBoard);
+
+        if (checkBoard(gameBoard)) {
+            console.log('Full');
+            checkGameOver(gameBoard);
+        } else { 
+            console.log('Room') 
+            generateNewTile(gameBoard);
+        }
 
         return gameBoard;
     }
