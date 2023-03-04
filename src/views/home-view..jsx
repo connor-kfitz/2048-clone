@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Row from "../components/row";
 import Header from "../components/header";
-import Info from "../components/game-info";
+import GameInfo from "../components/game-info";
 import { rotate, handleTileMerge, generateNewTile, checkGameOver, checkBoard, compareState } from "../game-functions/game-functions";
 
 export default function HomeView() {
@@ -135,13 +135,16 @@ export default function HomeView() {
     
 
     return (
-        <main className="main">
+        <div className="home">
             <Header/>
-            <div className="game-container">
-                {gameMatrix.map((row, key) => (
-                    <Row row={row} key={key} />
-                ))}
-            </div>
-        </main>
+            <main className="main">
+                <div className="game-container">
+                    {gameMatrix.map((row, key) => (
+                        <Row row={row} key={key} />
+                    ))}
+                </div>
+            </main>
+            <GameInfo/>
+        </div>
     )
 }

@@ -10,12 +10,14 @@ export default function GameBlock({ value }) {
         lineHeight: '1',
         height: '100%',
         fontSize: '5.5rem',
+        borderRadius: '.3rem'
     }
     const inactiveBlockStyle = {
         backgroundColor: '#cdc1b4',
         // margin: '1rem',
         height: '100%',
         width: '100%',
+        borderRadius: '.3rem'
     }
 
     return (

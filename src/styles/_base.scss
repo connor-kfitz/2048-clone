@@ -26,13 +26,7 @@ body {
     font-weight: 400;
     font-size: 1.6rem;
     line-height: 1.6;
-    color: #fff;
+    color: $text-color;
     background-color: $background-color;
     overflow-y: scroll !important;
-}
-
-.main {
-    height: 100%;
-    max-width: 52rem;
-    margin: 0 auto;
 }
