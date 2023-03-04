@@ -14,6 +14,13 @@ export default function HomeView() {
                                                   [0, 0, 0, 0]]);      
                                                   
 
+    const [translateData, setTranslateData] = useState([[0, 0, 0, 0],
+                                                        [0, 0, 0, 0],
+                                                        [0, 0, 0, 0],
+                                                        [0, 0, 0, 0]]);  
+    
+    const [translateDirection, setTranslateDirection] = useState('');
+
     function handleKeyPress(event) {
 
         if(event.keyCode == 37){
@@ -70,12 +77,27 @@ export default function HomeView() {
             console.log('Invalid Move')
         } else { 
             generateNewTile(deepCopy);
-            return updateState(deepCopy);
+            setTimeout(()=> {
+                return updateState(deepCopy);
+            }, 100)
         }
     }
 
+    // var translateXData = [[0, 0, 0, 0],
+    //                         [0, 0, 0, 0],
+    //                         [0, 0, 0, 0],
+    //                         [0, 0, 0, 0]];
+
     function onKeyRight(gameBoard) {
-        
+
+        // translateData[0][0] = 4;
+        let test = [...translateData];
+        test[0][0] = 1;
+        test[1][0] = -1;
+        console.log(test);
+        setTranslateData(test);
+        setTranslateDirection('horizontal');
+
         let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
         let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
@@ -127,9 +149,9 @@ export default function HomeView() {
         document.addEventListener('keydown', handleKeyPress, true)
 
         console.log('Mounted');
-        let deepCopy = JSON.parse(JSON.stringify(gameMatrix));
-        generateNewTile(deepCopy);
-        updateState(deepCopy);
+        // let deepCopy = JSON.parse(JSON.stringify(gameMatrix));
+        // generateNewTile(deepCopy);
+        // updateState(deepCopy);
     }, []);
 
     
@@ -140,7 +162,7 @@ export default function HomeView() {
             <main className="main">
                 <div className="game-container">
                     {gameMatrix.map((row, key) => (
-                        <Row row={row} key={key} />
+                        <Row row={row} rowIndex={key} translateData={translateData} translateDirection={translateDirection} key={key}/>
                     ))}
                 </div>
             </main>

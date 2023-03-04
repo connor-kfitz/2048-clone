@@ -54,14 +54,14 @@ function filterZeroValues(row, direction) {
         }
     }
 
-    return (row);
+    return row;
 }
 
 export function handleTileMerge(input, direction) {
 
     if (direction === 'right') {
         for (let i=0; i < input.length; i++) {
-            filterZeroValues(input[i], 'right') ;
+            filterZeroValues(input[i], 'right');
             for (let j=input[i].length; j > 0; j--) {
                 if (input[i][j] > 0 && input[i][j] == input[i][j-1]) {
                     input[i][j] = input[i][j] * 2
