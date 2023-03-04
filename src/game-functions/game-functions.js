@@ -1,3 +1,8 @@
+export function initGame(gameBoard) {
+
+    gameBoard = generateNewTile(gameBoard);
+}
+
 export function rotate(matrix, direction) {
 
     let n=matrix.length;
@@ -96,6 +101,7 @@ export function generateNewTile(gameBoard) {
     let newTileIndex = Math.floor(Math.random() * zeroIndices.length)
 
     return gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
+
 }
 
 export function checkBoard(gameBoard) {
@@ -118,15 +124,12 @@ export function checkGameOver(gameBoard) {
     for (let i=0; i < gameBoard.length; i++) {
         for (let j=0; j < gameBoard[i].length; j++) {
             if (i < gameBoard.length - 1 && j < gameBoard[i].length - 1) {
-                // console.log(i, " ", j)
                 if (gameBoard[i][j] == (gameBoard[i][j+1] || gameBoard[i+1][j])) { 
-                    console.log(gameBoard[i][j], gameBoard[i][j+1]);
                     console.log('More Room');
                     return false 
                 }
             }
             else if (j == gameBoard[i].length - 1 && i < gameBoard.length -1) {
-                // console.log(gameBoard[i][j], " ", gameBoard[[i][j]]);
                 if (gameBoard[i][j] == gameBoard[i+1][j]) {
                     console.log('More Room');
                     return false 
@@ -142,6 +145,16 @@ export function checkGameOver(gameBoard) {
     }
 
     console.log('Game Over!');
-    
+
+    return true;
+}
+
+export function compareState(matrixOne, matrixTwo) {
+    for (let i=0; i < matrixOne.length; i++) {
+        for (let j=0; j <matrixOne[i].length; j++) {
+            if (matrixOne[i][j] != matrixTwo[i][j]) { return false }
+        }
+    }
+
     return true;
 }

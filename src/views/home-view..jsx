@@ -1,108 +1,142 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Row from "../components/row";
-import { rotate, handleTileMerge, generateNewTile, checkGameOver, checkBoard } from "../game-functions/game-functions";
+import Header from "../components/header";
+import Info from "../components/game-info";
+import { rotate, handleTileMerge, generateNewTile, checkGameOver, checkBoard, compareState } from "../game-functions/game-functions";
 
 export default function HomeView() {
 
+    document.body.style.overflow = "hidden"
 
-    const [gameMatrix, setGameMatrix] = useState([[0, 0, 4, 2],
-                                                  [14, 13, 12, 2],
-                                                  [15, 16, 17, 19],
-                                                  [22, 20, 18, 18]]);                          
-    
+    const [gameMatrix, setGameMatrix] = useState([[0, 0, 0, 0],
+                                                  [0, 0, 0, 0],
+                                                  [0, 0, 0, 0],
+                                                  [0, 0, 0, 0]]);      
+                                                  
+
     function handleKeyPress(event) {
 
         if(event.keyCode == 37){
-            setGameMatrix(onKeyLeft(gameMatrix));
+            onKeyLeft(gameMatrix);
         } 
         
         else if(event.keyCode == 38) {
-            setGameMatrix(onKeyUp(gameMatrix));
+            event.preventDefault();
+            onKeyUp(gameMatrix);
         } 
         
         else if(event.keyCode == 39) {
-            setGameMatrix(onKeyRight(gameMatrix));
+            onKeyRight(gameMatrix);
         } 
         
         else if(event.keyCode == 40) {
-            setGameMatrix(onKeyDown(gameMatrix));
-        }   
+            event.preventDefault();
+            onKeyDown(gameMatrix);
+        }
+        
     }
 
     function onKeyLeft(gameBoard) {
 
-        gameBoard = [...gameBoard];
-        handleTileMerge(gameBoard, 'left');
+        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
-        if (checkBoard(gameBoard)) {
-            console.log('Full');
-            checkGameOver(gameBoard);
+        handleTileMerge(deepCopy, 'left');
+
+        if (checkBoard(deepCopy) === true) {
+            console.log('Full Board');
+            checkGameOver(deepCopy);
+        } else if (compareState(deepCopy, originalDeepCopy)) {
+            console.log('Invalid Move')
         } else { 
-            console.log('Room') 
-            generateNewTile(gameBoard);
+            generateNewTile(deepCopy);
+            return updateState(deepCopy);
         }
-
-        return gameBoard;
     }
 
     function onKeyUp(gameBoard) {
 
-        gameBoard = [...gameBoard];
-        gameBoard = rotate(gameBoard, 'clockwise');
-        gameBoard = handleTileMerge(gameBoard, 'right');
-        gameBoard = rotate(gameBoard, 'counterClockwise');
+        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
-        if (checkBoard(gameBoard)) {
-            console.log('Full');
-            checkGameOver(gameBoard);
+        deepCopy = rotate(deepCopy, 'clockwise');
+        deepCopy = handleTileMerge(deepCopy, 'right');
+        deepCopy = rotate(deepCopy, 'counterClockwise');
+
+        if (checkBoard(deepCopy) === true) {
+            console.log('Full Board');
+            checkGameOver(deepCopy);
+        } else if (compareState(deepCopy, originalDeepCopy)) {
+            console.log('Invalid Move')
         } else { 
-            console.log('Room') 
-            generateNewTile(gameBoard);
+            generateNewTile(deepCopy);
+            return updateState(deepCopy);
         }
-
-        return gameBoard;
     }
 
     function onKeyRight(gameBoard) {
+        
+        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
-        gameBoard = [...gameBoard];
-        gameBoard = handleTileMerge(gameBoard, 'right');
+        deepCopy = handleTileMerge(deepCopy, 'right');
 
-        if (checkBoard(gameBoard)) {
-            console.log('Full');
-            checkGameOver(gameBoard);
+        if (checkBoard(deepCopy) === true) {
+            console.log('Full Board');
+            checkGameOver(deepCopy);
+        } else if (compareState(deepCopy, originalDeepCopy)) {
+            console.log('Invalid Move')
         } else { 
-            console.log('Room') 
-            generateNewTile(gameBoard);
+            generateNewTile(deepCopy);
+            return updateState(deepCopy);
         }
-
-        return gameBoard;
     }
 
     function onKeyDown(gameBoard) {
 
-        gameBoard = [...gameBoard];
-        gameBoard = rotate(gameBoard, 'clockwise');
-        gameBoard = handleTileMerge(gameBoard, 'left');
-        gameBoard = rotate(gameBoard, 'counterClockwise');
+        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
-        if (checkBoard(gameBoard)) {
-            console.log('Full');
-            checkGameOver(gameBoard);
+        deepCopy = rotate(deepCopy, 'clockwise');
+        deepCopy = handleTileMerge(deepCopy, 'left');
+        deepCopy = rotate(deepCopy, 'counterClockwise');
+
+        if (checkBoard(deepCopy) === true) {
+            console.log('Full Board');
+            checkGameOver(deepCopy);
+        } else if (compareState(deepCopy, originalDeepCopy)) {
+            console.log('Invalid Move')
         } else { 
-            console.log('Room') 
-            generateNewTile(gameBoard);
+            generateNewTile(deepCopy);
+            return updateState(deepCopy);
+        }
+    }
+
+    function updateState(gameBoard) {
+        let updatedGame = [...gameMatrix];
+        for (let i=0; i < gameBoard.length; i++) {
+            for (let j=0; j <gameBoard[i].length; j++) {
+                updatedGame[i][j] = gameBoard[i][j];
+            }
         }
 
-        return gameBoard;
+        return setGameMatrix(updatedGame);
     }
 
     useEffect(() => {
         document.addEventListener('keydown', handleKeyPress, true)
+
+        console.log('Mounted');
+        let deepCopy = JSON.parse(JSON.stringify(gameMatrix));
+        generateNewTile(deepCopy);
+        updateState(deepCopy);
     }, []);
+
+    
 
     return (
         <main className="main">
+            <Header/>
             <div className="game-container">
                 {gameMatrix.map((row, key) => (
                     <Row row={row} key={key} />

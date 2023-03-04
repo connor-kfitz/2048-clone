@@ -1,12 +1,21 @@
 export default function GameBlock({ value }) {
     
     const activeBlockStyle = {
-        backgroundColor: '#18122B'
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#eee4da',
+        color: '#776e65',
+        fontWeight: 'bold',
+        lineHeight: '1',
+        height: '100%',
+        fontSize: '5.5rem',
     }
     const inactiveBlockStyle = {
+        backgroundColor: '#cdc1b4',
+        // margin: '1rem',
         height: '100%',
         width: '100%',
-        backgroundColor: '#635985'
     }
 
     return (

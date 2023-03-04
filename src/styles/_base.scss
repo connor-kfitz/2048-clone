@@ -1,3 +1,10 @@
+$background-color: #faf8ef;
+
+$text-color: #776e65;
+$text-secondary-color: #eee4da;
+
+$button-color: #8f7a66;
+
 * {
     margin: 0;
     padding: 0;
@@ -20,33 +27,12 @@ body {
     font-size: 1.6rem;
     line-height: 1.6;
     color: #fff;
+    background-color: $background-color;
+    overflow-y: scroll !important;
 }
 
 .main {
     height: 100%;
-    // width: 100vw;
-    background-color: #393053;
-}
-
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;    
-    font-size: 14rem;
-    transition: 1s ease-in;
-
-}
-
-.row {
-    display: flex;
-    justify-content: center;
-    transition: 1s ease-in;
-
-}
-
-.game-block {
-    width: 22.4rem;
-    height: 22.4rem;
-    text-align: center;
-    transition: 1s ease-in;
+    max-width: 52rem;
+    margin: 0 auto;
 }

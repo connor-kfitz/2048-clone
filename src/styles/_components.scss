@@ -1,0 +1,115 @@
+.score-cont {
+    display: flex;
+    width: 100%;
+
+    &__title {
+        color: $text-color;
+        font-size: 8rem;
+        font-weight: 700;
+        margin-right: auto;
+    }
+
+    &__current-score {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        line-height: 1.2;
+        font-size: 2.5rem;
+        background-color: #bbada0;
+        border-radius: .4rem;
+        padding: 0 1rem;
+        margin-right: .75rem;
+        max-height: 6.5rem;
+        min-width: 9rem;
+    }
+
+    &__score-title {
+        font-size: 1.6rem;
+        color: $text-secondary-color;
+        font-weight: 800;
+    }
+
+    &__score-text {
+        font-weight: 600;
+    }
+
+    &__best-score {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        line-height: 1.2;
+        font-size: 2.5rem;
+        background-color: #bbada0;
+        border-radius: .4rem;
+        padding: 0 1rem;
+        max-height: 6.5rem;
+        min-width: 9rem;
+
+    }
+}
+
+.info-cont {
+    display: flex;
+    font-size: 1.8rem;
+    width: 100%;
+
+    &__text {
+        color: $text-color;
+        font-weight: 500;
+        margin-right: auto;
+    }
+
+    &__text-bold {
+        font-weight: bold;
+    }
+
+    &__rules-link {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    &__new-game-button {
+        background-color: $button-color;
+        font-weight: bold;
+        font-size: 2rem;
+        color: #fff;
+        outline: none;
+        border: none;
+        padding: 0 2rem;
+        border-radius: .4rem;
+        cursor: pointer;
+        max-height: 4.5rem;
+    }
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    font-size: 2rem;
+    transition: 1s ease-in;
+    width: 52rem;
+    height: 52rem;
+    background-color: #bbada0;
+    padding: .5rem;
+}
+
+.row {
+    flex: 0 0 25%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s ease-in;
+
+}
+
+.game-block {
+    flex: 0 0 25%;
+    height: 100%;
+    text-align: center;
+    transition: 1s ease-in;
+    padding: 1rem;
+}
