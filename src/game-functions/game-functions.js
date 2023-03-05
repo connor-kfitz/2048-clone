@@ -103,7 +103,7 @@ export function generateNewTile(gameBoard) {
 
     let newTileIndex = Math.floor(Math.random() * zeroIndices.length)
 
-    return gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
+    gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
 
 }
 
