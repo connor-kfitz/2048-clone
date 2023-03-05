@@ -6,10 +6,10 @@ import { rotate, handleTileMerge, generateNewTile, checkGameOver, checkBoard, co
 
 export default function HomeView() {
 
-    const [gameMatrix, setGameMatrix] = useState([[0, 2, 0, 4],
+    const [gameMatrix, setGameMatrix] = useState([[0, 0, 0, 0],
                                                   [0, 0, 0, 0],
-                                                  [0, 4, 0, 2],
-                                                  [0, 0, 0, 0]]);     
+                                                  [0, 2, 2, 0],
+                                                  [0, 2, 2, 2]]);     
                                                   
 
     const [translateData, setTranslateData] = useState([[0, 0, 0, 0],
@@ -17,7 +17,7 @@ export default function HomeView() {
                                                         [0, 0, 0, 0],
                                                         [0, 0, 0, 0]]);  
     
-    const [translateDirection, setTranslateDirection] = useState('');
+    const [translateDirection, setTranslateDirection] = useState('horizontal'); 
 
     function handleKeyPress(event) {
 
@@ -25,19 +25,19 @@ export default function HomeView() {
             onKeyLeft(gameMatrix);
         } 
         
-        // else if(event.keyCode == 38) {
-        //     event.preventDefault();
-        //     onKeyUp(gameMatrix);
-        // } 
+        else if(event.keyCode == 38) {
+            event.preventDefault();
+            onKeyUp(gameMatrix);
+        } 
         
         else if(event.keyCode == 39) {
             onKeyRight(gameMatrix);
         } 
         
-        // else if(event.keyCode == 40) {
-        //     event.preventDefault();
-        //     onKeyDown(gameMatrix);
-        // }
+        else if(event.keyCode == 40) {
+            event.preventDefault();
+            onKeyDown(gameMatrix);
+        }
         
     }
 
@@ -51,7 +51,9 @@ export default function HomeView() {
         mergeTiles(matrixIndexed, matrixTransValues, 'left');
         removeIndices(matrixIndexed, matrixValues);
 
+        console.log(matrixValues);
 
+        setTranslateDirection('horizontal');
         updateTrans(matrixTransValues);
         setTimeout(() => {
             updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
@@ -74,14 +76,34 @@ export default function HomeView() {
         // }
     }
 
-    // function onKeyUp(gameBoard) {
+    function onKeyUp(gameBoard) {
+
+        let matrixIndexed = JSON.parse(JSON.stringify(gameBoard));
+        let matrixTransValues = Array.from(Array(4), () => Array(4).fill(0));
+        let matrixValues = Array.from(Array(4), () => Array(4).fill(0));
+
+        rotate(matrixIndexed, 'clockwise');
+        addIndices(matrixIndexed);
+        mergeTiles(matrixIndexed, matrixTransValues, 'right');
+        removeIndices(matrixIndexed, matrixValues);
+        rotate(matrixValues, 'counterClockwise');
+        rotate(matrixTransValues, 'counterClockwise');
+
+        setTranslateDirection('vertical');
+        updateTrans(matrixTransValues);
+        setTimeout(() => {
+            updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
+            updateState(matrixValues);
+        }, 250)
+
+
 
     //     let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
     //     let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
-    //     deepCopy = rotate(deepCopy, 'clockwise');
-    //     deepCopy = handleTileMerge(deepCopy, 'right');
-    //     deepCopy = rotate(deepCopy, 'counterClockwise');
+        // deepCopy = rotate(deepCopy, 'clockwise');
+        // deepCopy = handleTileMerge(deepCopy, 'right');
+        // deepCopy = rotate(deepCopy, 'counterClockwise');
 
     //     if (checkBoard(deepCopy) === true) {
     //         console.log('Full Board');
@@ -94,7 +116,7 @@ export default function HomeView() {
     //             return updateState(deepCopy);
     //         }, 100)
     //     }
-    // }
+    }
 
     function onKeyRight(gameBoard) {
 
@@ -106,7 +128,7 @@ export default function HomeView() {
         mergeTiles(matrixIndexed, matrixTransValues, 'right');
         removeIndices(matrixIndexed, matrixValues);
 
-
+        setTranslateDirection('horizontal');
         updateTrans(matrixTransValues);
         setTimeout(() => {
             updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
@@ -222,7 +244,6 @@ export default function HomeView() {
 
                 for (let j=gameBoard[i].length - 1; j >= 0; j--) {
                     if (gameBoard[i][j][0] > 0 && gameBoard[i][j][0] == gameBoard[i][j-1][0]) {
-                        console.log(gameBoard[i][j-1]);
                         matrixTransValues[i][gameBoard[i][j-1][1]] += 1;
                         matrixTransValues[i][gameBoard[i][j-2][1]] += 1;
 
@@ -245,24 +266,44 @@ export default function HomeView() {
                 }
 
                 for (let j=0; j < gameBoard[i].length; j++) {
-                    if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j+1]) {
+
+                    if (gameBoard[i][j][0] > 0 && gameBoard[i][j][0] == gameBoard[i][j+1][0]) {
+                        console.log('left');
+
                         matrixTransValues[i][gameBoard[i][j+1][1]] -= 1;
                         matrixTransValues[i][gameBoard[i][j+2][1]] -= 1;
 
                         gameBoard[i][j][0] = gameBoard[i][j][0] * 2
                         gameBoard[i].splice(j+1, 1);
                         gameBoard[i].push([0,0]);
-                     } 
+                     }
                 }
             }
         }
 
-        console.log(gameBoard);
     }
 
     
 
-    // function onKeyDown(gameBoard) {
+    function onKeyDown(gameBoard) {
+
+        let matrixIndexed = JSON.parse(JSON.stringify(gameBoard));
+        let matrixTransValues = Array.from(Array(4), () => Array(4).fill(0));
+        let matrixValues = Array.from(Array(4), () => Array(4).fill(0));
+
+        rotate(matrixIndexed, 'clockwise');
+        addIndices(matrixIndexed);
+        mergeTiles(matrixIndexed, matrixTransValues, 'left');
+        removeIndices(matrixIndexed, matrixValues);
+        rotate(matrixValues, 'counterClockwise');
+        rotate(matrixTransValues, 'counterClockwise');
+
+        setTranslateDirection('vertical');
+        updateTrans(matrixTransValues);
+        setTimeout(() => {
+            updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
+            updateState(matrixValues);
+        }, 250)
 
     //     let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
     //     let deepCopy = JSON.parse(JSON.stringify(gameBoard));
@@ -280,7 +321,7 @@ export default function HomeView() {
     //         generateNewTile(deepCopy);
     //         return updateState(deepCopy);
     //     }
-    // }
+    }
 
     function updateState(gameBoard) {
         let updatedGame = [...gameMatrix];

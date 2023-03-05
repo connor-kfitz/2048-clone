@@ -1,7 +1,7 @@
 export default function GameBlock({ value, rowIndex, columnIndex, translateData, translateDirection }) {
 
     const translate = [translateData[rowIndex][columnIndex], translateDirection];
-    var axis = "";
+    var axis = "horizontal";
     var transition = '.2s';
 
     if (translateData[rowIndex][columnIndex] == 0 ) {
@@ -13,6 +13,7 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         
     } else if (translate[1] == 'vertical') {
         axis ='Y';
+        translate[0] = translate[0] * -1;
     }
 
     const activeBlockStyle = {
