@@ -52,6 +52,7 @@ function filterZeroValues(row, direction) {
                 row.unshift(0);
             }
         }
+        
     }
 
     return row;
@@ -87,6 +88,8 @@ export function handleTileMerge(input, direction) {
 
     return input;
 }
+
+
 
 export function generateNewTile(gameBoard) {
 

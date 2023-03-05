@@ -6,12 +6,10 @@ import { rotate, handleTileMerge, generateNewTile, checkGameOver, checkBoard, co
 
 export default function HomeView() {
 
-    document.body.style.overflow = "hidden"
-
-    const [gameMatrix, setGameMatrix] = useState([[0, 0, 0, 0],
+    const [gameMatrix, setGameMatrix] = useState([[0, 2, 0, 4],
                                                   [0, 0, 0, 0],
-                                                  [0, 0, 0, 0],
-                                                  [0, 0, 0, 0]]);      
+                                                  [0, 4, 0, 2],
+                                                  [0, 0, 0, 0]]);     
                                                   
 
     const [translateData, setTranslateData] = useState([[0, 0, 0, 0],
@@ -27,128 +25,290 @@ export default function HomeView() {
             onKeyLeft(gameMatrix);
         } 
         
-        else if(event.keyCode == 38) {
-            event.preventDefault();
-            onKeyUp(gameMatrix);
-        } 
+        // else if(event.keyCode == 38) {
+        //     event.preventDefault();
+        //     onKeyUp(gameMatrix);
+        // } 
         
         else if(event.keyCode == 39) {
             onKeyRight(gameMatrix);
         } 
         
-        else if(event.keyCode == 40) {
-            event.preventDefault();
-            onKeyDown(gameMatrix);
-        }
+        // else if(event.keyCode == 40) {
+        //     event.preventDefault();
+        //     onKeyDown(gameMatrix);
+        // }
         
     }
 
     function onKeyLeft(gameBoard) {
 
-        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
-        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
+        let matrixIndexed = JSON.parse(JSON.stringify(gameBoard));
+        let matrixTransValues = Array.from(Array(4), () => Array(4).fill(0));
+        let matrixValues = Array.from(Array(4), () => Array(4).fill(0));
 
-        handleTileMerge(deepCopy, 'left');
+        addIndices(matrixIndexed);
+        mergeTiles(matrixIndexed, matrixTransValues, 'left');
+        removeIndices(matrixIndexed, matrixValues);
 
-        if (checkBoard(deepCopy) === true) {
-            console.log('Full Board');
-            checkGameOver(deepCopy);
-        } else if (compareState(deepCopy, originalDeepCopy)) {
-            console.log('Invalid Move')
-        } else { 
-            generateNewTile(deepCopy);
-            return updateState(deepCopy);
-        }
+
+        updateTrans(matrixTransValues);
+        setTimeout(() => {
+            updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
+            updateState(matrixValues);
+        }, 250)
+
+        // let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+        // let deepCopy = JSON.parse(JSON.stringify(gameBoard));
+
+        // handleTileMerge(deepCopy, 'left');
+
+        // if (checkBoard(deepCopy) === true) {
+        //     console.log('Full Board');
+        //     checkGameOver(deepCopy);
+        // } else if (compareState(deepCopy, originalDeepCopy)) {
+        //     console.log('Invalid Move')
+        // } else { 
+        //     generateNewTile(deepCopy);
+        //     return updateState(deepCopy);
+        // }
     }
 
-    function onKeyUp(gameBoard) {
+    // function onKeyUp(gameBoard) {
 
-        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
-        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
+    //     let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+    //     let deepCopy = JSON.parse(JSON.stringify(gameBoard));
 
-        deepCopy = rotate(deepCopy, 'clockwise');
-        deepCopy = handleTileMerge(deepCopy, 'right');
-        deepCopy = rotate(deepCopy, 'counterClockwise');
+    //     deepCopy = rotate(deepCopy, 'clockwise');
+    //     deepCopy = handleTileMerge(deepCopy, 'right');
+    //     deepCopy = rotate(deepCopy, 'counterClockwise');
 
-        if (checkBoard(deepCopy) === true) {
-            console.log('Full Board');
-            checkGameOver(deepCopy);
-        } else if (compareState(deepCopy, originalDeepCopy)) {
-            console.log('Invalid Move')
-        } else { 
-            generateNewTile(deepCopy);
-            setTimeout(()=> {
-                return updateState(deepCopy);
-            }, 100)
-        }
-    }
-
-    // var translateXData = [[0, 0, 0, 0],
-    //                         [0, 0, 0, 0],
-    //                         [0, 0, 0, 0],
-    //                         [0, 0, 0, 0]];
+    //     if (checkBoard(deepCopy) === true) {
+    //         console.log('Full Board');
+    //         checkGameOver(deepCopy);
+    //     } else if (compareState(deepCopy, originalDeepCopy)) {
+    //         console.log('Invalid Move')
+    //     } else { 
+    //         generateNewTile(deepCopy);
+    //         setTimeout(()=> {
+    //             return updateState(deepCopy);
+    //         }, 100)
+    //     }
+    // }
 
     function onKeyRight(gameBoard) {
 
-        // translateData[0][0] = 4;
-        let test = [...translateData];
-        test[0][0] = 1;
-        test[1][0] = -1;
-        console.log(test);
-        setTranslateData(test);
-        setTranslateDirection('horizontal');
+        let matrixIndexed = JSON.parse(JSON.stringify(gameBoard));
+        let matrixTransValues = Array.from(Array(4), () => Array(4).fill(0));
+        let matrixValues = Array.from(Array(4), () => Array(4).fill(0));
 
-        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
-        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
+        addIndices(matrixIndexed);
+        mergeTiles(matrixIndexed, matrixTransValues, 'right');
+        removeIndices(matrixIndexed, matrixValues);
 
-        deepCopy = handleTileMerge(deepCopy, 'right');
 
-        if (checkBoard(deepCopy) === true) {
-            console.log('Full Board');
-            checkGameOver(deepCopy);
-        } else if (compareState(deepCopy, originalDeepCopy)) {
-            console.log('Invalid Move')
-        } else { 
-            generateNewTile(deepCopy);
-            return updateState(deepCopy);
+        updateTrans(matrixTransValues);
+        setTimeout(() => {
+            updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
+            updateState(matrixValues);
+        }, 250)
+
+        // handleTileMerge(deepCopy, 'right');
+
+        // if (checkBoard(deepCopy) === true) {
+        //     console.log('Full Board');
+        //     checkGameOver(deepCopy);
+        // } else if (compareState(deepCopy, originalDeepCopy)) {
+        //     console.log('Invalid Move')
+        // } else { 
+        //     // generateNewTile(deepCopy);
+        //     return updateState(deepCopy);
+        // }
+    }
+
+    // function addIndices(gameBoard) {
+    //     let matrixIndexed = JSON.parse(JSON.stringify(gameBoard));
+    //     let matrixTransValues = Array.from(Array(4), () => Array(4).fill(0));
+    //     let matrixValues = Array.from(Array(4), () => Array(4).fill(0));
+
+    //     let matrixIndexedOriginal = JSON.parse(JSON.stringify(matrixIndexed));
+
+    //     for (let i=0; i < matrixIndexed.length; i++) {
+    //         removeZeroTiles(matrixIndexed[i]);
+
+    //         for (let j=matrixIndexed[i].length - 1; j >= 0; j--) {
+    //             if(matrixIndexed[i][j][0] > 0){
+    //                 matrixTransValues[i][matrixIndexed[i][j][1]] = j - matrixIndexed[i][j][1];
+    //             }
+    //         }
+
+    //         for (let j=matrixIndexed[i].length - 1; j >= 0; j--) {
+    //             if (matrixIndexed[i][j][0] > 0 && matrixIndexed[i][j][0] == matrixIndexed[i][j-1][0]) {
+    //                 console.log(matrixIndexed[i][j-1]);
+    //                 matrixTransValues[i][matrixIndexed[i][j-1][1]] += 1;
+    //                 matrixTransValues[i][matrixIndexed[i][j-2][1]] += 1;
+
+    //                 matrixIndexed[i][j][0] = matrixIndexed[i][j][0] * 2
+    //                 matrixIndexed[i].splice(j-1, 1);
+    //                 matrixIndexed[i].unshift([0, 0]);
+    //             }
+    //         }
+    //     }
+
+    //     for (let i=0; i < matrixIndexed.length; i++) {
+    //         for(let j=0; j < matrixIndexed[i].length; j++) {
+    //             matrixValues[i][j] = matrixIndexed[i][j][0]
+    //         }
+    //     }
+
+    //     console.log('Matrix Merged', matrixValues);
+
+
+    //     updateTrans(matrixTransValues);
+
+    //     setTimeout(() => {
+    //         updateTrans(Array.from(Array(4), () => Array(4).fill(0)))
+    //         updateState(matrixValues);
+    //     }, 250)
+    // }
+
+    function removeZeroTiles(row, direction) {
+        if(direction == 'right') {
+            for (let i= 0; i < row.length; i++) {
+                if (row[i][0] == 0) {
+                    row.splice(i, 1);
+                    row.unshift([0, i]);
+                }
+            }
+        }
+
+        else if (direction == 'left') {
+            for (let i=row.length - 1; i >= 0; i--) {
+                if (row[i][0] == 0) {
+                    row.splice(i, 1) 
+                    row.push([0, i]);
+                }
+            }
         }
     }
 
-    function onKeyDown(gameBoard) {
-
-        let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
-        let deepCopy = JSON.parse(JSON.stringify(gameBoard));
-
-        deepCopy = rotate(deepCopy, 'clockwise');
-        deepCopy = handleTileMerge(deepCopy, 'left');
-        deepCopy = rotate(deepCopy, 'counterClockwise');
-
-        if (checkBoard(deepCopy) === true) {
-            console.log('Full Board');
-            checkGameOver(deepCopy);
-        } else if (compareState(deepCopy, originalDeepCopy)) {
-            console.log('Invalid Move')
-        } else { 
-            generateNewTile(deepCopy);
-            return updateState(deepCopy);
+    function addIndices(gameBoard) {
+        for(let i=0; i < gameBoard.length; i++) {
+            for(let j=0; j < gameBoard[i].length; j++) {
+                gameBoard[i][j] = [gameBoard[i][j], j];
+            }
         }
     }
+
+    function removeIndices(gameBoard, matrixValues) {
+        for (let i=0; i < gameBoard.length; i++) {
+            for(let j=0; j < gameBoard[i].length; j++) {
+                matrixValues[i][j] = gameBoard[i][j][0]
+            }
+        }
+    }
+
+    function mergeTiles(gameBoard, matrixTransValues, direction) {
+
+        if(direction == 'right') {
+            for (let i=0; i < gameBoard.length; i++) {
+                removeZeroTiles(gameBoard[i], 'right');
+
+                for (let j=gameBoard[i].length - 1; j >= 0; j--) {
+                    if(gameBoard[i][j][0] > 0){
+                        matrixTransValues[i][gameBoard[i][j][1]] = j - gameBoard[i][j][1];
+                    }
+                }
+
+                for (let j=gameBoard[i].length - 1; j >= 0; j--) {
+                    if (gameBoard[i][j][0] > 0 && gameBoard[i][j][0] == gameBoard[i][j-1][0]) {
+                        console.log(gameBoard[i][j-1]);
+                        matrixTransValues[i][gameBoard[i][j-1][1]] += 1;
+                        matrixTransValues[i][gameBoard[i][j-2][1]] += 1;
+
+                        gameBoard[i][j][0] = gameBoard[i][j][0] * 2
+                        gameBoard[i].splice(j-1, 1);
+                        gameBoard[i].unshift([0, 0]);
+                    }
+                }
+            }
+        }
+
+        else if (direction == 'left') {
+            for (let i=0; i < gameBoard.length; i++) {
+                removeZeroTiles(gameBoard[i], 'left') ;
+
+                for (let j=gameBoard[i].length - 1; j >= 0; j--) {
+                    if(gameBoard[i][j][0] > 0){
+                        matrixTransValues[i][gameBoard[i][j][1]] = j - gameBoard[i][j][1];
+                    }
+                }
+
+                for (let j=0; j < gameBoard[i].length; j++) {
+                    if (gameBoard[i][j] > 0 && gameBoard[i][j] == gameBoard[i][j+1]) {
+                        matrixTransValues[i][gameBoard[i][j+1][1]] -= 1;
+                        matrixTransValues[i][gameBoard[i][j+2][1]] -= 1;
+
+                        gameBoard[i][j][0] = gameBoard[i][j][0] * 2
+                        gameBoard[i].splice(j+1, 1);
+                        gameBoard[i].push([0,0]);
+                     } 
+                }
+            }
+        }
+
+        console.log(gameBoard);
+    }
+
+    
+
+    // function onKeyDown(gameBoard) {
+
+    //     let originalDeepCopy = JSON.parse(JSON.stringify(gameBoard));
+    //     let deepCopy = JSON.parse(JSON.stringify(gameBoard));
+
+    //     deepCopy = rotate(deepCopy, 'clockwise');
+    //     deepCopy = handleTileMerge(deepCopy, 'left');
+    //     deepCopy = rotate(deepCopy, 'counterClockwise');
+
+    //     if (checkBoard(deepCopy) === true) {
+    //         console.log('Full Board');
+    //         checkGameOver(deepCopy);
+    //     } else if (compareState(deepCopy, originalDeepCopy)) {
+    //         console.log('Invalid Move')
+    //     } else { 
+    //         generateNewTile(deepCopy);
+    //         return updateState(deepCopy);
+    //     }
+    // }
 
     function updateState(gameBoard) {
         let updatedGame = [...gameMatrix];
         for (let i=0; i < gameBoard.length; i++) {
             for (let j=0; j <gameBoard[i].length; j++) {
                 updatedGame[i][j] = gameBoard[i][j];
+                
+            }
+        }
+        return setGameMatrix(updatedGame);
+    }
+
+    function updateTrans(input) {
+        let updatedGame = [...input];
+        for (let i=0; i < input.length; i++) {
+            for (let j=0; j <input[i].length; j++) {
+                updatedGame[i][j] = input[i][j];
             }
         }
 
-        return setGameMatrix(updatedGame);
+        return setTranslateData(updatedGame);
+
     }
 
     useEffect(() => {
         document.addEventListener('keydown', handleKeyPress, true)
 
-        console.log('Mounted');
+        // console.log('Mounted');
         // let deepCopy = JSON.parse(JSON.stringify(gameMatrix));
         // generateNewTile(deepCopy);
         // updateState(deepCopy);

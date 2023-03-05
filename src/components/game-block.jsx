@@ -2,9 +2,15 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
 
     const translate = [translateData[rowIndex][columnIndex], translateDirection];
     var axis = "";
+    var transition = '.2s';
+
+    if (translateData[rowIndex][columnIndex] == 0 ) {
+        transition = '0s';
+    }
 
     if (translate[1] == 'horizontal') {
         axis = 'X';
+        
     } else if (translate[1] == 'vertical') {
         axis ='Y';
     }
@@ -23,17 +29,19 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
     }
     const inactiveBlockStyle = {
         backgroundColor: '#cdc1b4',
+        backgroundColor: 'transparent',
         height: '100%',
         width: '100%',
         borderRadius: '.3rem'
     }
 
-    var moveBlockX = {
-        transform: `translate${axis}(${translate[0] * 12.75}rem)`
+    const moveBlock = {
+        transform: `translate${axis}(${translate[0] * 12.75}rem)`,
+        transition: transition
     }
 
     return (
-        <div className="game-block" style={moveBlockX}>
+        <div className="game-block" style={moveBlock}>
             {value ? 
             <div style={activeBlockStyle}>{value}</div> : 
             <div style={inactiveBlockStyle}></div> }
