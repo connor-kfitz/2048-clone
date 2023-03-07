@@ -27,6 +27,13 @@ export default function HomeView() {
 
     const [translateDirection, setTranslateDirection] = useState('horizontal'); 
 
+    const newGame = () => {
+        let newGame = Array.from(Array(4), () => Array(4).fill(0));
+        generateNewTile(newGame);
+        generateNewTile(newGame);
+        updateState(newGame)
+    }
+
     function handleKeyPress(event) {
         
         if(event.keyCode == 37){
@@ -219,12 +226,13 @@ export default function HomeView() {
     
     return (
         <div className="home">
-            <Header/>
+            <Header newGame={newGame}/>
             <main className="main">
                 <div className="game-container">
                     {gameMatrix.map((row, key) => (
                         <Row row={row} rowIndex={key} translateData={translateData} 
-                        translateDirection={translateDirection} key={key} mergeData={mergeData} endAnimation={endAnimation}/>
+                        translateDirection={translateDirection} key={key} mergeData={mergeData} 
+                        endAnimation={endAnimation}/>
                     ))}
                 </div>
             </main>

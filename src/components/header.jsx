@@ -1,4 +1,4 @@
-export default function Header() {
+export default function Header( { newGame } ) {
     const currentScore = 0;
     const highScore = 0;
 
@@ -21,7 +21,7 @@ export default function Header() {
                     <br/>
                     <a className="info-cont__rules-link">How to play →</a>
                 </div>
-                <button className="info-cont__new-game-button">New Game</button>
+                <button className="info-cont__new-game-button" onClick={newGame}>New Game</button>
             </div>
         </header>
     )
