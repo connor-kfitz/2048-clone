@@ -1,11 +1,43 @@
-export default function GameBlock({ value, rowIndex, columnIndex, translateData, translateDirection }) {
+import { useState } from "react";
+
+export default function GameBlock({ value, rowIndex, columnIndex, translateData, translateDirection, mergeData, endAnimation }) {
 
     const translate = [translateData[rowIndex][columnIndex], translateDirection];
     var axis = "horizontal";
     var transition = '.2s';
+    var scale = 1;
+    var color = '#776e65';
+    var backgroundColor = '#eee4da';
 
+    setColor();
+
+    function setColor() {
+        if (value == 4) {backgroundColor = '#ede0c8'}
+        else if (value == 8) {backgroundColor = '#f2b179'}
+        else if (value == 16) {backgroundColor = '#f59563'}
+        else if (value == 32) {backgroundColor = '#f67c60'}
+        else if (value == 64) {backgroundColor = '#f65e3b'}
+        else if (value == 128) {backgroundColor = '#edcf73'}
+        else if (value == 256) {backgroundColor = '#edcc62'}
+        else if (value == 512) {backgroundColor = '#edc850'}
+        else if (value == 1024) {backgroundColor = '#edc53f'}
+        else if (value == 2048) {backgroundColor = '#edc22d'}
+        if (value >= 8) {color = '#fff'}
+    }
+    
     if (translateData[rowIndex][columnIndex] == 0 ) {
         transition = '0s';
+    }
+
+    if(endAnimation) {
+        var transition = '.1s';
+  
+    }
+
+    if(mergeData[rowIndex][columnIndex] == 1) {
+        scale = 1.2;
+        transition = '.1s';
+        
     }
 
     if (translate[1] == 'horizontal') {
@@ -20,8 +52,8 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#eee4da',
-        color: '#776e65',
+        backgroundColor: backgroundColor,
+        color: color,
         fontWeight: 'bold',
         lineHeight: '1',
         height: '100%',
@@ -37,8 +69,10 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
     }
 
     const moveBlock = {
-        transform: `translate${axis}(${translate[0] * 12.75}rem)`,
-        transition: transition
+        transform: `translate${axis}(${translate[0] * 12.75}rem)
+                    scale(${scale})`,
+        transition: transition,
+        // animation: `merge ${anim}s linear 1`
     }
 
     return (

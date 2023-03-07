@@ -1,6 +1,21 @@
-export function initGame(gameBoard) {
+export function addIndices(gameBoard) {
 
-    gameBoard = generateNewTile(gameBoard);
+    for(let i=0; i < gameBoard.length; i++) {
+        for(let j=0; j < gameBoard[i].length; j++) {
+            gameBoard[i][j] = [gameBoard[i][j], j];
+        }
+    }
+
+}
+
+export function removeIndices(gameBoard, matrixValues) {
+
+    for (let i=0; i < gameBoard.length; i++) {
+        for(let j=0; j < gameBoard[i].length; j++) {
+            matrixValues[i][j] = gameBoard[i][j][0]
+        }
+    }
+
 }
 
 export function rotate(matrix, direction) {
@@ -30,63 +45,87 @@ export function rotate(matrix, direction) {
             }
         }
     }
-
-    return matrix;
 }
 
-function filterZeroValues(row, direction) {
+export function removeZeroTiles(row, direction) {
 
-    if (direction == 'left'){
-        for (let i=row.length - 1; i >= 0; i--) {
-            if (row[i] == 0) {
-                row.splice(i, 1) 
-                row.push(0);
-            }
-        }
-    }
-
-    else if (direction == 'right') { 
+    if(direction == 'right') {
         for (let i= 0; i < row.length; i++) {
-            if (row[i] == 0) {
+            if (row[i][0] == 0) {
                 row.splice(i, 1);
-                row.unshift(0);
+                row.unshift([0, i]);
             }
         }
-        
     }
 
-    return row;
+    else if (direction == 'left') {
+        for (let i=row.length - 1; i >= 0; i--) {
+            if (row[i][0] == 0) {
+                row.splice(i, 1) 
+                row.push([0, i]);
+            }
+        }
+    }
 }
 
-export function handleTileMerge(input, direction) {
+export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge) {
 
-    if (direction === 'right') {
-        for (let i=0; i < input.length; i++) {
-            filterZeroValues(input[i], 'right');
-            for (let j=input[i].length; j > 0; j--) {
-                if (input[i][j] > 0 && input[i][j] == input[i][j-1]) {
-                    input[i][j] = input[i][j] * 2
-                    input[i].splice(j-1, 1);
-                    input[i].unshift(0);
+    if(direction == 'right') {
+        for (let i=0; i < gameBoard.length; i++) {
+            removeZeroTiles(gameBoard[i], 'right');
+
+            for (let j=gameBoard[i].length - 1; j >= 0; j--) {
+                if(gameBoard[i][j][0] > 0){
+                    matrixTransValues[i][gameBoard[i][j][1]] = j - gameBoard[i][j][1];
+                }
+            }
+
+            for (let j=gameBoard[i].length - 1; j > 0; j--) {
+                if (gameBoard[i][j][0] > 0 && gameBoard[i][j][0] == gameBoard[i][j-1][0]) {
+                    matrixTransValues[i][gameBoard[i][j-1][1]] += 1;
+                    let k = 2
+                    while (j-k >= 0) {
+                        matrixTransValues[i][gameBoard[i][j-k][1]] += 1;
+                        k++
+                    }
+
+                    gameBoard[i][j][0] = gameBoard[i][j][0] * 2
+                    matrixMerge[i][j] = 1;
+                    gameBoard[i].splice(j-1, 1);
+                    gameBoard[i].unshift([0, 0]);
                 }
             }
         }
-    } 
-    
-    else if (direction === 'left') {
-        for (let i=0; i < input.length; i++) {
-            filterZeroValues(input[i], 'left') ;
-            for (let j=0; j < input[i].length; j++) {
-                if (input[i][j] > 0 && input[i][j] == input[i][j+1]) {
-                    input[i][j] = input[i][j] * 2
-                    input[i].splice(j+1, 1);
-                    input[i].push(0);
-                 } 
+    }
+
+    else if (direction == 'left') {
+        for (let i=0; i < gameBoard.length; i++) {
+            removeZeroTiles(gameBoard[i], 'left') ;
+
+            for (let j=gameBoard[i].length - 1; j >= 0; j--) {
+                if(gameBoard[i][j][0] > 0){
+                    matrixTransValues[i][gameBoard[i][j][1]] = j - gameBoard[i][j][1];
+                }
+            }
+
+            for (let j=0; j < gameBoard[i].length - 1; j++) {
+
+                if (gameBoard[i][j][0] > 0 && gameBoard[i][j][0] == gameBoard[i][j+1][0]) {
+                    matrixTransValues[i][gameBoard[i][j+1][1]] += -1;
+                    let k = 2;
+                    while (j+k <= gameBoard[i].length - 1) {
+                        matrixTransValues[i][gameBoard[i][j+k][1]] += -1;
+                        k++
+                    }
+
+                    gameBoard[i][j][0] = gameBoard[i][j][0] * 2
+                    matrixMerge[i][j] = 1;
+                    gameBoard[i].splice(j+1, 1);
+                    gameBoard[i].push([0,NaN]);
+                 }
             }
         }
     }
-
-    return input;
 }
 
 
