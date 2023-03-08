@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Row from "../components/row";
 import Header from "../components/header";
 import GameInfo from "../components/game-info";
@@ -23,9 +23,11 @@ export default function HomeView() {
                                                  [0, 0, 0, 0]]);
 
     
-    const [endAnimation, setEndAnimation] = useState();
+    const [endAnimation, setEndAnimation] = useState(false);
 
-    const [translateDirection, setTranslateDirection] = useState('horizontal'); 
+    const [translateDirection, setTranslateDirection] = useState('horizontal');
+    
+    const [currentScore, setCurrentScore] = useState(0);
 
     const newGame = () => {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
@@ -34,26 +36,36 @@ export default function HomeView() {
         updateState(newGame)
     }
 
+    useEffect(() => {
+
+    }, [endAnimation])
+
     function handleKeyPress(event) {
-        
-        if(event.keyCode == 37){
-                onKeyLeft(gameMatrix);
-        } 
-        
-        else if(event.keyCode == 38) {
-            event.preventDefault();
-            onKeyUp(gameMatrix);
-        } 
-        
-        else if(event.keyCode == 39) {
-            onKeyRight(gameMatrix);
-        } 
-        
-        else if(event.keyCode == 40) {
-            event.preventDefault();
-            onKeyDown(gameMatrix);
-        }
-        
+
+            document.removeEventListener('keydown', handleKeyPress);
+            setTimeout(() => {
+                console.log('Ready');
+                document.addEventListener('keydown', handleKeyPress)
+            }, 450)
+
+            if(event.keyCode == 37){
+                    onKeyLeft(gameMatrix);
+            } 
+            
+            else if(event.keyCode == 38) {
+                event.preventDefault();
+                onKeyUp(gameMatrix);
+            } 
+            
+            else if(event.keyCode == 39) {
+                onKeyRight(gameMatrix);
+            } 
+            
+            else if(event.keyCode == 40) {
+                event.preventDefault();
+                onKeyDown(gameMatrix);
+            }
+
     }
 
     function onKeyLeft(gameBoard) {
@@ -65,7 +77,7 @@ export default function HomeView() {
         let matrixMerge = Array.from(Array(4), () => Array(4).fill(0));
 
         addIndices(matrixIndexed);
-        mergeTiles(matrixIndexed, matrixTransValues, 'left', matrixMerge);
+        let score = mergeTiles(matrixIndexed, matrixTransValues, 'left', matrixMerge);
         removeIndices(matrixIndexed, matrixValues);
 
         if (checkBoard(matrixValues) === true) {
@@ -76,11 +88,11 @@ export default function HomeView() {
         } else { 
 
             setTranslateDirection('horizontal');
-            updateGame(matrixValues, matrixTransValues, matrixMerge);
+            updateGame(matrixValues, matrixTransValues, matrixMerge, score);
         }
     }
 
-    function updateGame(matrixValues, matrixTransValues, matrixMerge) {
+    function updateGame(matrixValues, matrixTransValues, matrixMerge, score) {
 
         updateTrans(matrixTransValues);
         setTimeout(() => {
@@ -89,6 +101,7 @@ export default function HomeView() {
             updateState(matrixValues);
             setTimeout(() => {
                 updateMergeData(matrixMerge);
+                // setCurrentScore(score + currentScore);
             }, 0)
             setTimeout(() => {
                 setEndAnimation(true);
@@ -215,7 +228,7 @@ export default function HomeView() {
     }
 
     useEffect(() => {
-        document.addEventListener('keydown', handleKeyPress, true)
+        document.addEventListener('keydown', handleKeyPress)
 
         console.log('Mounted');
         let deepCopy = JSON.parse(JSON.stringify(gameMatrix));
@@ -225,14 +238,14 @@ export default function HomeView() {
 
     
     return (
-        <div className="home">
-            <Header newGame={newGame}/>
+        <div className="home" >
+            <Header currentScore={currentScore} newGame={newGame}/>
             <main className="main">
-                <div className="game-container">
+                <div className="game-container" >
                     {gameMatrix.map((row, key) => (
                         <Row row={row} rowIndex={key} translateData={translateData} 
                         translateDirection={translateDirection} key={key} mergeData={mergeData} 
-                        endAnimation={endAnimation}/>
+                        endAnimation={endAnimation} />
                     ))}
                 </div>
             </main>

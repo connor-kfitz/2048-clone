@@ -1,5 +1,5 @@
-export default function Header( { newGame } ) {
-    const currentScore = 0;
+export default function Header( { currentScore, newGame } ) {
+    // const currentScore = 0;
     const highScore = 0;
 
     return (

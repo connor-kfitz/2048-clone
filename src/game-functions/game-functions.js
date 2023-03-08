@@ -69,6 +69,7 @@ export function removeZeroTiles(row, direction) {
 }
 
 export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge) {
+    let score = 0;
 
     if(direction == 'right') {
         for (let i=0; i < gameBoard.length; i++) {
@@ -90,6 +91,7 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
                     }
 
                     gameBoard[i][j][0] = gameBoard[i][j][0] * 2
+                    score += gameBoard[i][j][0];
                     matrixMerge[i][j] = 1;
                     gameBoard[i].splice(j-1, 1);
                     gameBoard[i].unshift([0, 0]);
@@ -119,6 +121,7 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
                     }
 
                     gameBoard[i][j][0] = gameBoard[i][j][0] * 2
+                    score += gameBoard[i][j][0];
                     matrixMerge[i][j] = 1;
                     gameBoard[i].splice(j+1, 1);
                     gameBoard[i].push([0,NaN]);
@@ -126,6 +129,8 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
             }
         }
     }
+
+    return score;
 }
 
 
