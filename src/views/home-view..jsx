@@ -29,43 +29,50 @@ export default function HomeView() {
 
     const [currentScore, setCurrentScore] = useState(0);
 
-    
+    const [highScore, setHighScore] = useState(0);
+
     const newGame = () => {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
         setCurrentScore(0);
         generateNewTile(newGame);
         generateNewTile(newGame);
-        updateState(newGame)
+        updateValues(newGame)
     }
 
     function handleKeyPress(event) {
 
-            document.removeEventListener('keydown', handleKeyPress);
-            document.addEventListener('keydown', preventScroll);
-            setTimeout(() => {
-                document.removeEventListener('keydown', preventScroll);
-                document.addEventListener('keydown', handleKeyPress)
-            }, 450)
+        lockKeyboard();
 
-            if(event.keyCode == 37){
-                    onKeyLeft(gameMatrix);
-            } 
-            
-            else if(event.keyCode == 38) {
-                event.preventDefault();
-                onKeyUp(gameMatrix);
-            } 
-            
-            else if(event.keyCode == 39) {
-                onKeyRight(gameMatrix);
-            } 
-            
-            else if(event.keyCode == 40) {
-                event.preventDefault();
-                onKeyDown(gameMatrix);
-            }
+        if(event.keyCode == 37){
+                onKeyLeft(gameMatrix);
+        } 
+        
+        else if(event.keyCode == 38) {
+            event.preventDefault();
+            onKeyUp(gameMatrix);
+        } 
+        
+        else if(event.keyCode == 39) {
+            onKeyRight(gameMatrix);
+        } 
+        
+        else if(event.keyCode == 40) {
+            event.preventDefault();
+            onKeyDown(gameMatrix);
+        }
 
     }
+
+    function lockKeyboard() {
+        document.removeEventListener('keydown', handleKeyPress);
+        document.addEventListener('keydown', preventScroll);
+        setTimeout(() => {
+            document.removeEventListener('keydown', preventScroll);
+            document.addEventListener('keydown', handleKeyPress)
+        }, 450)
+    }
+
+    
 
     function onKeyLeft(gameBoard) {
 
@@ -81,7 +88,9 @@ export default function HomeView() {
 
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
-            checkGameOver(matrixValues);
+            if (checkGameOver(matrixValues)) {
+                setHighScore(currentScore);
+            }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
         } else { 
@@ -91,36 +100,7 @@ export default function HomeView() {
         }
     }
 
-    function preventScroll(event) {
-        if(event.keyCode == 38) {
-            event.preventDefault();
-        } 
-        
-        else if(event.keyCode == 40) {
-            event.preventDefault();
-        }
-    }
-
-    function updateGame(matrixValues, matrixTransValues, matrixMerge, score) {
-
-        updateTrans(matrixTransValues);
-        setTimeout(() => {
-            updateTrans(Array.from(Array(4), () => Array(4).fill(0)));
-            generateNewTile(matrixValues);
-            updateState(matrixValues);
-            setTimeout(() => {
-                updateMergeData(matrixMerge);
-                setCurrentScore(prevState => prevState + score);
-            }, 0)
-            setTimeout(() => {
-                setEndAnimation(true);
-                updateMergeData(Array.from(Array(4), () => Array(4).fill(0)));
-                setTimeout(() => {
-                    setEndAnimation(false);
-                }, 100)
-            }, 100)
-        }, 250)
-    }
+    
 
     function onKeyUp(gameBoard) {
 
@@ -140,7 +120,9 @@ export default function HomeView() {
 
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
-            checkGameOver(matrixValues);
+            if (checkGameOver(matrixValues)) {
+                setHighScore(currentScore);
+            }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
         } else { 
@@ -163,7 +145,9 @@ export default function HomeView() {
 
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
-            checkGameOver(matrixValues);
+            if (checkGameOver(matrixValues)) {
+                setHighScore(currentScore);
+            }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
         } else { 
@@ -192,7 +176,9 @@ export default function HomeView() {
 
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
-            checkGameOver(matrixValues);
+            if (checkGameOver(matrixValues)) {
+                setHighScore(currentScore);
+            }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
         } else { 
@@ -202,12 +188,39 @@ export default function HomeView() {
         }
     }
 
-    function updateState(gameBoard) {
+    function updateGame(matrixValues, matrixTransValues, matrixMerge, score) {
+
+        updateTrans(matrixTransValues);
+
+        setTimeout(() => {
+
+            updateTrans(Array.from(Array(4), () => Array(4).fill(0)));
+            generateNewTile(matrixValues);
+            updateValues(matrixValues);
+
+            setTimeout(() => {
+                updateMergeData(matrixMerge);
+                setCurrentScore(prevState => prevState + score);
+            }, 0)
+
+            setTimeout(() => {
+                setEndAnimation(true);
+                updateMergeData(Array.from(Array(4), () => Array(4).fill(0)));
+
+                setTimeout(() => {
+                    setEndAnimation(false);
+                }, 100)
+
+            }, 100)
+
+        }, 250)
+    }
+
+    function updateValues(gameBoard, state) {
         let updatedGame = [...gameMatrix];
         for (let i=0; i < gameBoard.length; i++) {
             for (let j=0; j <gameBoard[i].length; j++) {
-                updatedGame[i][j] = gameBoard[i][j];
-                
+                updatedGame[i][j] = gameBoard[i][j]; 
             }
         }
 
@@ -236,19 +249,24 @@ export default function HomeView() {
         setMergeData(updatedGame);
     }
 
+    function preventScroll(event) {
+
+        if(event.keyCode == 38) {
+            event.preventDefault();
+        } 
+        else if(event.keyCode == 40) {
+            event.preventDefault();
+        }
+    }
+
     useEffect(() => {
         document.addEventListener('keydown', handleKeyPress)
-
-        console.log('Mounted');
-        let deepCopy = JSON.parse(JSON.stringify(gameMatrix));
-        generateNewTile(deepCopy);
-        updateState(deepCopy);
+        newGame();
     }, []);
 
-    
     return (
         <div className="home" >
-            <Header currentScore={currentScore} newGame={newGame}/>
+            <Header currentScore={currentScore} highScore={highScore} newGame={newGame}/>
             <main className="main">
                 <div className="game-container" >
                     {gameMatrix.map((row, key) => (

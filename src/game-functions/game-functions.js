@@ -45,6 +45,7 @@ export function rotate(matrix, direction) {
             }
         }
     }
+
 }
 
 export function removeZeroTiles(row, direction) {
@@ -66,9 +67,11 @@ export function removeZeroTiles(row, direction) {
             }
         }
     }
+
 }
 
 export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge) {
+
     let score = 0;
 
     if(direction == 'right') {
@@ -131,6 +134,7 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
     }
 
     return score;
+
 }
 
 
@@ -197,6 +201,7 @@ export function checkGameOver(gameBoard) {
 }
 
 export function compareState(matrixOne, matrixTwo) {
+
     for (let i=0; i < matrixOne.length; i++) {
         for (let j=0; j <matrixOne[i].length; j++) {
             if (matrixOne[i][j] != matrixTwo[i][j]) { return false }
@@ -204,4 +209,5 @@ export function compareState(matrixOne, matrixTwo) {
     }
 
     return true;
+    
 }
