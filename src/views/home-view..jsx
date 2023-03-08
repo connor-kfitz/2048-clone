@@ -26,25 +26,24 @@ export default function HomeView() {
     const [endAnimation, setEndAnimation] = useState(false);
 
     const [translateDirection, setTranslateDirection] = useState('horizontal');
-    
+
     const [currentScore, setCurrentScore] = useState(0);
 
+    
     const newGame = () => {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
+        setCurrentScore(0);
         generateNewTile(newGame);
         generateNewTile(newGame);
         updateState(newGame)
     }
 
-    useEffect(() => {
-
-    }, [endAnimation])
-
     function handleKeyPress(event) {
 
             document.removeEventListener('keydown', handleKeyPress);
+            document.addEventListener('keydown', preventScroll);
             setTimeout(() => {
-                console.log('Ready');
+                document.removeEventListener('keydown', preventScroll);
                 document.addEventListener('keydown', handleKeyPress)
             }, 450)
 
@@ -92,6 +91,16 @@ export default function HomeView() {
         }
     }
 
+    function preventScroll(event) {
+        if(event.keyCode == 38) {
+            event.preventDefault();
+        } 
+        
+        else if(event.keyCode == 40) {
+            event.preventDefault();
+        }
+    }
+
     function updateGame(matrixValues, matrixTransValues, matrixMerge, score) {
 
         updateTrans(matrixTransValues);
@@ -101,7 +110,7 @@ export default function HomeView() {
             updateState(matrixValues);
             setTimeout(() => {
                 updateMergeData(matrixMerge);
-                // setCurrentScore(score + currentScore);
+                setCurrentScore(prevState => prevState + score);
             }, 0)
             setTimeout(() => {
                 setEndAnimation(true);
@@ -123,7 +132,7 @@ export default function HomeView() {
 
         rotate(matrixIndexed, 'clockwise');
         addIndices(matrixIndexed);
-        mergeTiles(matrixIndexed, matrixTransValues, 'right', matrixMerge);
+        let score = mergeTiles(matrixIndexed, matrixTransValues, 'right', matrixMerge);
         removeIndices(matrixIndexed, matrixValues);
         rotate(matrixValues, 'counterClockwise');
         rotate(matrixTransValues, 'counterClockwise');
@@ -136,7 +145,7 @@ export default function HomeView() {
             console.log('Invalid Move')
         } else { 
             setTranslateDirection('vertical');
-            updateGame(matrixValues, matrixTransValues, matrixMerge);
+            updateGame(matrixValues, matrixTransValues, matrixMerge, score);
         }
     }
 
@@ -149,7 +158,7 @@ export default function HomeView() {
         let matrixMerge = Array.from(Array(4), () => Array(4).fill(0));
 
         addIndices(matrixIndexed);
-        mergeTiles(matrixIndexed, matrixTransValues, 'right', matrixMerge);
+        let score = mergeTiles(matrixIndexed, matrixTransValues, 'right', matrixMerge);
         removeIndices(matrixIndexed, matrixValues);
 
         if (checkBoard(matrixValues) === true) {
@@ -159,7 +168,7 @@ export default function HomeView() {
             console.log('Invalid Move')
         } else { 
             setTranslateDirection('horizontal');
-            updateGame(matrixValues, matrixTransValues, matrixMerge);
+            updateGame(matrixValues, matrixTransValues, matrixMerge, score);
 
         }
     }
@@ -174,7 +183,7 @@ export default function HomeView() {
 
         rotate(matrixIndexed, 'clockwise');
         addIndices(matrixIndexed);
-        mergeTiles(matrixIndexed, matrixTransValues, 'left', matrixMerge);
+        let score = mergeTiles(matrixIndexed, matrixTransValues, 'left', matrixMerge);
         removeIndices(matrixIndexed, matrixValues);
         rotate(matrixValues, 'counterClockwise');
         rotate(matrixTransValues, 'counterClockwise');
@@ -188,7 +197,7 @@ export default function HomeView() {
             console.log('Invalid Move')
         } else { 
             setTranslateDirection('vertical');
-            updateGame(matrixValues, matrixTransValues, matrixMerge);
+            updateGame(matrixValues, matrixTransValues, matrixMerge, score);
 
         }
     }
