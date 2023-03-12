@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Row from "../components/row";
 import Header from "../components/header";
 import GameInfo from "../components/game-info";
@@ -31,6 +31,26 @@ export default function HomeView() {
 
     const [highScore, setHighScore] = useState(0);
 
+    const firstRender = useRef(true);
+
+    useEffect(()=> {
+        if (!firstRender.current) {
+            saveGame(gameMatrix, 'board')
+        }
+    },[gameMatrix])
+
+    // useEffect(()=> {
+    //     if (!firstRender.current) {
+    //         saveGame(currentScore, 'currentScore')
+    //     }
+    // },[currentScore])
+
+    // useEffect(()=> {
+    //     if (!firstRender.current) {
+    //         saveGame(highScore, 'highScore')
+    //     }
+    // },[highScore])
+
     const newGame = () => {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
         setCurrentScore(0);
@@ -44,7 +64,7 @@ export default function HomeView() {
         lockKeyboard();
 
         if(event.keyCode == 37){
-                onKeyLeft(gameMatrix);
+            onKeyLeft(gameMatrix);
         } 
         
         else if(event.keyCode == 38) {
@@ -69,10 +89,9 @@ export default function HomeView() {
         setTimeout(() => {
             document.removeEventListener('keydown', preventScroll);
             document.addEventListener('keydown', handleKeyPress)
+            // saveGame(gameMatrix, currentScore, highScore);
         }, 450)
     }
-
-    
 
     function onKeyLeft(gameBoard) {
 
@@ -89,7 +108,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
+                // setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -121,7 +140,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
+                // setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -146,7 +165,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
+                // setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -177,7 +196,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
+                // setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -259,16 +278,65 @@ export default function HomeView() {
         }
     }
 
+    function loadLocalStorage() {
+        // const gameData = localStorage.getItem("gameData");
+        // const board = ('gameData', JSON.parse(gameData)).board;
+        // const currentScore = ('gameData', JSON.parse(gameData)).score;
+        // const highScore = ('gameData', JSON.parse(gameData)).highScore;
+
+        setCurrentScore(currentScore);
+        setHighScore(highScore);
+
+
+        // if (board) {
+        //     updateValues(board);
+        // } else {
+            newGame();
+        // }
+    }
+
+    function saveGame(value, type) {
+        // const gameData = localStorage.getItem("gameData");
+        // const gameDataValues = ('gameData', JSON.parse(gameData))
+
+        // console.log(gameDataValues);
+
+        if (type === 'board') {
+            // gameDataValues.board = value;
+            // console.log(gameData.board);
+        }
+        // else if (type === 'currentScore') {
+        //     gameData.score = value;
+        // }
+        // else if (type === 'highScore') {
+        //     gameData.highScore = value;
+        // }
+
+
+        // const gameData = {
+        //     board: board,
+        //     score: score,
+        //     highScore: highScore
+        // }
+
+        // console.log(gameData);
+        // localStorage.setItem('gameData', JSON.stringify(gameData));
+    }
+
     useEffect(() => {
+
+        firstRender.current = false;
+        loadLocalStorage();
         document.addEventListener('keydown', handleKeyPress)
-        newGame();
+
     }, []);
+
 
     return (
         <div className="home" >
             <Header currentScore={currentScore} highScore={highScore} newGame={newGame}/>
             <main className="main">
-                <div className="game-container" >
+                <div className="game-container" id="game-container">
                     {gameMatrix.map((row, key) => (
                         <Row row={row} rowIndex={key} translateData={translateData} 
                         translateDirection={translateDirection} key={key} mergeData={mergeData} 

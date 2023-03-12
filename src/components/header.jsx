@@ -10,14 +10,14 @@ export default function Header( { currentScore, highScore, newGame } ) {
                 </div>
                 <div className="score-cont__best-score">
                     <span className="score-cont__score-title">BEST</span>
-                    <span className="score-cont__score-text">{highScore}</span>
+                    <span className="score-cont__score-text">{highScore ? highScore : 0}</span>
                 </div>
             </div>
             <div className="info-cont">
                 <div className="info-cont__text">
                     Join the tiles, get to <span className="info-cont__text-bold">2048!</span>
                     <br/>
-                    <a className="info-cont__rules-link">How to play →</a>
+                    <a className="info-cont__rules-link" href="#rules">How to play →</a>
                 </div>
                 <button className="info-cont__new-game-button" onClick={newGame}>New Game</button>
             </div>
