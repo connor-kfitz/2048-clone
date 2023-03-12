@@ -72,6 +72,11 @@
         font-weight: bold;
         text-decoration: underline;
         cursor: pointer;
+
+        &:link,
+        &:visited {
+            color: $text-color;
+        }
     }
 
     &__new-game-button {
@@ -135,7 +140,13 @@
 
     &__text-bold {
         font-weight: 600;
+
+        &:link,
+        &:visited {
+            color: $text-color;
+        }
     }
+
 }
 
 .info-section {
@@ -156,6 +167,11 @@
 
     &__text-bold {
         font-weight: 600;
+
+        &:link,
+        &:visited {
+            color: $text-color;
+        }
     }
 }
 
