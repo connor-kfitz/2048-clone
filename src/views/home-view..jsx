@@ -9,8 +9,7 @@ export default function HomeView() {
     const [gameMatrix, setGameMatrix] = useState([[0, 0, 0, 0],
                                                   [0, 0, 0, 0],
                                                   [0, 0, 0, 0],
-                                                  [0, 0, 0, 0]]);     
-                                                  
+                                                  [0, 0, 0, 0]]);                                    
 
     const [translateData, setTranslateData] = useState([[0, 0, 0, 0],
                                                         [0, 0, 0, 0],
@@ -36,10 +35,14 @@ export default function HomeView() {
     useEffect(() => {
         if (!firstRender.current) {
             saveCurrentScore();
+            if (currentScore > highScore) {
+                setHighScore(currentScore);
+            }
         }
     },[currentScore])
 
     useEffect(() => {
+        console.log(highScore);
         if (!firstRender.current) {
             saveHighScore();
         }
@@ -107,7 +110,6 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -139,7 +141,6 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -164,7 +165,6 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -195,7 +195,6 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -279,7 +278,11 @@ export default function HomeView() {
 
     function loadLocalStorage() {
         const gameData = localStorage.getItem("gameData");
-        const board = ('gameData', JSON.parse(gameData)).board;
+        const board = [[2, 2, 6, 8],
+        [16, 14, 12, 10],
+        [18, 20, 22, 24],
+        [32, 30, 28, 26]]
+        // ('gameData', JSON.parse(gameData)).board;
         const currentScore = ('gameData', JSON.parse(gameData)).score;
         const highScore = ('gameData', JSON.parse(gameData)).highScore;
 
@@ -349,7 +352,7 @@ export default function HomeView() {
 
         setTimeout(() => {
             firstRender.current = false;
-        }, 2000)
+        }, 1000)
 
     }, []);
 
