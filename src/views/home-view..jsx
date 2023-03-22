@@ -33,30 +33,30 @@ export default function HomeView() {
 
     const firstRender = useRef(true);
 
-    useEffect(()=> {
+    useEffect(() => {
         if (!firstRender.current) {
-            saveGame(gameMatrix, 'board')
+            saveCurrentScore();
+        }
+    },[currentScore])
+
+    useEffect(() => {
+        if (!firstRender.current) {
+            saveHighScore();
+        }
+    },[highScore])
+
+    useEffect(() => {
+        if (!firstRender.current) {
+            saveBoard();
         }
     },[gameMatrix])
-
-    // useEffect(()=> {
-    //     if (!firstRender.current) {
-    //         saveGame(currentScore, 'currentScore')
-    //     }
-    // },[currentScore])
-
-    // useEffect(()=> {
-    //     if (!firstRender.current) {
-    //         saveGame(highScore, 'highScore')
-    //     }
-    // },[highScore])
 
     const newGame = () => {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
         setCurrentScore(0);
         generateNewTile(newGame);
         generateNewTile(newGame);
-        updateValues(newGame)
+        updateValues(newGame);
     }
 
     function handleKeyPress(event) {
@@ -89,7 +89,6 @@ export default function HomeView() {
         setTimeout(() => {
             document.removeEventListener('keydown', preventScroll);
             document.addEventListener('keydown', handleKeyPress)
-            // saveGame(gameMatrix, currentScore, highScore);
         }, 450)
     }
 
@@ -108,7 +107,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                // setHighScore(currentScore);
+                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -140,7 +139,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                // setHighScore(currentScore);
+                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -165,7 +164,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                // setHighScore(currentScore);
+                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -196,7 +195,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
-                // setHighScore(currentScore);
+                setHighScore(currentScore);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -279,58 +278,80 @@ export default function HomeView() {
     }
 
     function loadLocalStorage() {
-        // const gameData = localStorage.getItem("gameData");
-        // const board = ('gameData', JSON.parse(gameData)).board;
-        // const currentScore = ('gameData', JSON.parse(gameData)).score;
-        // const highScore = ('gameData', JSON.parse(gameData)).highScore;
+        const gameData = localStorage.getItem("gameData");
+        const board = ('gameData', JSON.parse(gameData)).board;
+        const currentScore = ('gameData', JSON.parse(gameData)).score;
+        const highScore = ('gameData', JSON.parse(gameData)).highScore;
 
-        setCurrentScore(currentScore);
-        setHighScore(highScore);
+        let tracker = 0;
+        for (let i=0; i < board.length; i++) {
+            for (let j=0; j < board[i].length; j++) {
+                tracker += board[i][j];
+            }
+        }
 
-
-        // if (board) {
-        //     updateValues(board);
-        // } else {
+        if (tracker > 0) {
+            updateValues(board);
+            setCurrentScore(currentScore);
+            setHighScore(highScore);
+        } else {
             newGame();
-        // }
+        }
+
     }
 
-    function saveGame(value, type) {
-        // const gameData = localStorage.getItem("gameData");
-        // const gameDataValues = ('gameData', JSON.parse(gameData))
+    function saveBoard() {
+        const gameData = localStorage.getItem("gameData");
+        const currentScore = ('gameData', JSON.parse(gameData)).score;
+        const highScore = ('gameData', JSON.parse(gameData)).highScore;
 
-        // console.log(gameDataValues);
-
-        if (type === 'board') {
-            // gameDataValues.board = value;
-            // console.log(gameData.board);
+        const currentGameData = {
+            board: gameMatrix,
+            score: currentScore,
+            highScore: highScore
         }
-        // else if (type === 'currentScore') {
-        //     gameData.score = value;
-        // }
-        // else if (type === 'highScore') {
-        //     gameData.highScore = value;
-        // }
 
+        localStorage.setItem('gameData', JSON.stringify(currentGameData));
+    }
 
-        // const gameData = {
-        //     board: board,
-        //     score: score,
-        //     highScore: highScore
-        // }
+    function saveCurrentScore() {
+        const gameData = localStorage.getItem("gameData");
+        const board = ('gameData', JSON.parse(gameData)).board;
+        const highScore = ('gameData', JSON.parse(gameData)).highScore;
 
-        // console.log(gameData);
-        // localStorage.setItem('gameData', JSON.stringify(gameData));
+        const currentGameData = {
+            board: board,
+            score: currentScore,
+            highScore: highScore
+        }
+
+        localStorage.setItem('gameData', JSON.stringify(currentGameData));
+    }
+
+    function saveHighScore() {
+        const gameData = localStorage.getItem("gameData");
+        const board = ('gameData', JSON.parse(gameData)).board;
+        const currentScore = ('gameData', JSON.parse(gameData)).score;
+
+        const currentGameData = {
+            board: board,
+            score: currentScore,
+            highScore: highScore
+        }
+
+        localStorage.setItem('gameData', JSON.stringify(currentGameData));
     }
 
     useEffect(() => {
 
-        firstRender.current = false;
         loadLocalStorage();
         document.addEventListener('keydown', handleKeyPress)
 
-    }, []);
+        setTimeout(() => {
+            firstRender.current = false;
+        }, 2000)
 
+    }, []);
 
     return (
         <div className="home" >
