@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function GameBlock({ value, rowIndex, columnIndex, translateData, translateDirection, mergeData, endAnimation }) {
+export default function GameBlock({ value, rowIndex, columnIndex, translateData, translateDirection, mergeData, newTileData, endAnimation, newTileAnimation }) {
 
     const translate = [translateData[rowIndex][columnIndex], translateDirection];
     var axis = "horizontal";
@@ -31,7 +31,6 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
 
     if(endAnimation) {
         var transition = '.1s';
-  
     }
 
     if(mergeData[rowIndex][columnIndex] == 1) {
@@ -48,6 +47,19 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         translate[0] = translate[0] * -1;
     }
 
+    console.log(newTileData);
+
+    if (newTileData[rowIndex][columnIndex] > 0 && !newTileAnimation) {
+        scale = 0;
+        transition = '0s';
+    }
+
+    else if (newTileData[rowIndex][columnIndex] > 0 && newTileAnimation) {
+        scale = 1;
+        transition = '0.1s';
+    }
+
+    
     const activeBlockStyle = {
         display: 'flex',
         justifyContent: 'center',
@@ -72,7 +84,6 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         transform: `translate${axis}(${translate[0] * 12.75}rem)
                     scale(${scale})`,
         transition: transition,
-        // animation: `merge ${anim}s linear 1`
     }
 
     return (

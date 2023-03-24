@@ -21,8 +21,15 @@ export default function HomeView() {
                                                  [0, 0, 0, 0],
                                                  [0, 0, 0, 0]]);
 
+    const [newTileData, setNewTileData] = useState([[0, 0, 0, 0],
+                                                    [0, 0, 0, 0],
+                                                    [0, 0, 0, 0],
+                                                    [0, 0, 0, 0]]);
+
     
     const [endAnimation, setEndAnimation] = useState(false);
+
+    const [newTileAnimation, setNewTileAnimation] = useState(0);
 
     const [translateDirection, setTranslateDirection] = useState('horizontal');
 
@@ -42,7 +49,6 @@ export default function HomeView() {
     },[currentScore])
 
     useEffect(() => {
-        console.log(highScore);
         if (!firstRender.current) {
             saveHighScore();
         }
@@ -58,8 +64,19 @@ export default function HomeView() {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
         setCurrentScore(0);
         generateNewTile(newGame);
-        generateNewTile(newGame);
+        const newTileData = generateNewTile(newGame);
+        updateNewTileData(newTileData);
+        setNewTileAnimation(false);
         updateValues(newGame);
+
+        setTimeout(() => {
+            setNewTileAnimation(true);
+        }, 100)
+
+        setTimeout(() => {
+            setNewTileAnimation(false);
+            setNewTileData(Array.from(Array(4), () => Array(4).fill(0)));
+        }, 1000)
     }
 
     function handleKeyPress(event) {
@@ -233,7 +250,7 @@ export default function HomeView() {
         }, 250)
     }
 
-    function updateValues(gameBoard, state) {
+    function updateValues(gameBoard) {
         let updatedGame = [...gameMatrix];
         for (let i=0; i < gameBoard.length; i++) {
             for (let j=0; j <gameBoard[i].length; j++) {
@@ -266,6 +283,17 @@ export default function HomeView() {
         setMergeData(updatedGame);
     }
 
+    function updateNewTileData(gameBoard) {
+        let updatedGame = [...gameMatrix];
+        for (let i=0; i < gameBoard.length; i++) {
+            for (let j=0; j <gameBoard[i].length; j++) {
+                updatedGame[i][j] = gameBoard[i][j]; 
+            }
+        }
+
+        setNewTileData(updatedGame);
+    }
+
     function preventScroll(event) {
 
         if(event.keyCode == 38) {
@@ -278,11 +306,7 @@ export default function HomeView() {
 
     function loadLocalStorage() {
         const gameData = localStorage.getItem("gameData");
-        const board = [[2, 2, 6, 8],
-        [16, 14, 12, 10],
-        [18, 20, 22, 24],
-        [32, 30, 28, 26]]
-        // ('gameData', JSON.parse(gameData)).board;
+        const board = ('gameData', JSON.parse(gameData)).board;
         const currentScore = ('gameData', JSON.parse(gameData)).score;
         const highScore = ('gameData', JSON.parse(gameData)).highScore;
 
@@ -363,8 +387,8 @@ export default function HomeView() {
                 <div className="game-container" id="game-container">
                     {gameMatrix.map((row, key) => (
                         <Row row={row} rowIndex={key} translateData={translateData} 
-                        translateDirection={translateDirection} key={key} mergeData={mergeData} 
-                        endAnimation={endAnimation} />
+                        translateDirection={translateDirection} newTileData={newTileData} key={key} mergeData={mergeData} 
+                        endAnimation={endAnimation} newTileAnimation={newTileAnimation}/>
                     ))}
                 </div>
             </main>

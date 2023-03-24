@@ -153,6 +153,8 @@ export function generateNewTile(gameBoard) {
 
     gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
 
+    return gameBoard;
+
 }
 
 export function checkBoard(gameBoard) {
