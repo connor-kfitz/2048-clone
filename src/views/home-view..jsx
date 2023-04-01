@@ -114,9 +114,20 @@ export default function HomeView() {
     function lockKeyboard() {
         document.removeEventListener('keydown', handleKeyPress);
         document.addEventListener('keydown', preventScroll);
+        document.addEventListener('touch', preventScroll);
+
+        var gameBoard = document.getElementById('game-container');
+        gameBoard.removeEventListener('touchstart', handleTouchStart, false);        
+        gameBoard.removeEventListener('touchmove', handleTouchMove, false);
+
+
         setTimeout(() => {
             document.removeEventListener('keydown', preventScroll);
             document.addEventListener('keydown', handleKeyPress)
+
+            var gameBoard = document.getElementById('game-container');
+            gameBoard.addEventListener('touchstart', handleTouchStart, false);        
+            gameBoard.addEventListener('touchmove', handleTouchMove, false);
         }, 600)
     }
 
@@ -397,11 +408,61 @@ export default function HomeView() {
         loadLocalStorage();
         document.addEventListener('keydown', handleKeyPress)
 
+        var gameBoard = document.getElementById('game-container');
+        gameBoard.addEventListener('touchstart', handleTouchStart, false);        
+        gameBoard.addEventListener('touchmove', handleTouchMove, false);
+
+
         setTimeout(() => {
             firstRender.current = false;
         }, 1000)
 
     }, []);
+
+    var xDown = null;                                                        
+var yDown = null;
+
+function getTouches(evt) {
+  return evt.touches ||             // browser API
+         evt.originalEvent.touches; // jQuery
+}                                                     
+                                                                         
+function handleTouchStart(evt) {
+    const firstTouch = getTouches(evt)[0];                                      
+    xDown = firstTouch.clientX;                                      
+    yDown = firstTouch.clientY;                                      
+};                                                
+                                                                         
+function handleTouchMove(evt) {
+    if ( ! xDown || ! yDown ) {
+        return;
+    }
+
+    var xUp = evt.touches[0].clientX;                                    
+    var yUp = evt.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+                                                                         
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        if ( xDiff > 0 ) {
+            onKeyLeft(gameMatrix);
+        } else {
+            onKeyRight(gameMatrix);
+        }                       
+    } else {
+        if ( yDiff > 0 ) {
+            onKeyUp(gameMatrix);
+        } else { 
+            onKeyDown(gameMatrix);
+        }                                                                 
+    }
+
+    lockKeyboard();
+    /* reset values */
+    xDown = null;
+    yDown = null;                                             
+};
 
     return (
         <div className="home" >

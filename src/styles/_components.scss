@@ -180,6 +180,7 @@
     margin-bottom: 3.5rem;
     margin-left: auto;
     margin-right: auto;
+    touch-action: none;
 
     @include respond(35em) {
         aspect-ratio: 1 / 1;
