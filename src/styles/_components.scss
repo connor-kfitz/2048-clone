@@ -1,13 +1,20 @@
 .score-cont {
     display: flex;
-    width: 100%;
+    flex-wrap: wrap;
+    height: 100%;
+    flex: 0 0 50%;
+    justify-content: flex-end;
+    height: 16.1rem;
 
-    &__title {
-        line-height: 1.3;
-        color: $text-color;
-        font-size: 8rem;
-        font-weight: 700;
-        margin-right: auto;
+    @include respond (30.95em) {
+        margin-top: 2rem;
+        flex-wrap: nowrap;
+        width: 100%;
+        justify-content: center;
+    }
+
+    @include respond (25.875em) {
+        flex-wrap: wrap;
     }
 
     &__current-score {
@@ -24,6 +31,16 @@
         margin-right: .75rem;
         max-height: 6.5rem;
         min-width: 9rem;
+
+        @include respond (30.95em) {
+            margin-top: auto;
+            min-height: 6.5rem;
+        }
+
+        @include respond (25.875em) {
+            flex: .5;
+            margin-right: 2rem;
+        }
     }
 
     &__score-title {
@@ -50,18 +67,87 @@
         max-height: 6.5rem;
         min-width: 9rem;
 
+        @include respond (25.875em) {
+            flex: .5;
+        }
+    }
+
+    &__new-game-button {
+        background-color: $button-color;
+        font-weight: bold;
+        font-size: 2rem;
+        color: #fff;
+        outline: none;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: .4rem;
+        margin-top: auto;
+        cursor: pointer;
+        max-height: 4.5rem;
+
+        @include respond (30.95em) {
+            margin-bottom: auto;
+            margin-left: auto;
+        }
+
+        @include respond (25.875em) {
+            flex: 0 0 100%;
+            min-width: 14.3rem;
+            margin-top: 2rem;
+            margin-left: 0;
+        }
+
     }
 }
 
 .info-cont {
     display: flex;
+    flex-direction: column;
     font-size: 1.8rem;
-    width: 100%;
+    flex: 0 0 50%;
+
+    @include respond (30.95em) {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    @include respond (25.875em) {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    &__title {
+        line-height: 1.3;
+        color: $text-color;
+        font-size: 8rem;
+        font-weight: 700;
+        margin-right: auto;
+
+        @include respond (30.95em) {
+            margin-right: 4rem;
+        }
+
+        @include respond (25.875em) {
+            font-size: 11rem;
+            margin-right: 0;
+        }
+    }
 
     &__text {
         color: $text-color;
         font-weight: 500;
         margin-right: auto;
+
+        @include respond (30.95em) {
+            margin-top: auto;
+        }
+
+        @include respond (25.875em) {
+            margin-right: 0;
+            font-size: 2.2rem;
+        }
+  
     }
 
     &__text-bold {
@@ -78,19 +164,6 @@
             color: $text-color;
         }
     }
-
-    &__new-game-button {
-        background-color: $button-color;
-        font-weight: bold;
-        font-size: 2rem;
-        color: #fff;
-        outline: none;
-        border: none;
-        padding: 0 2rem;
-        border-radius: .4rem;
-        cursor: pointer;
-        max-height: 4.5rem;
-    }
 }
 
 .game-container {
@@ -104,6 +177,14 @@
     padding: .5rem;
     border-radius: .75rem;
     margin-bottom: 3.5rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include respond(35em) {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .row {
@@ -120,8 +201,10 @@
     left: 10px;
     z-index: 5;
     background-color: #cdc1b4;
-    height: 107px;
-    width: 107px;
+    // height: 107px;
+    // width: 107px;
+    height: 5.7rem;
+    width: 5.7rem;
     border-radius: .3rem;
 }
 

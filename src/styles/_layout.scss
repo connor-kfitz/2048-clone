@@ -1,13 +1,25 @@
 .home {
     display: flex;
     flex-direction: column;
-    max-width: 52rem;
+    justify-content: center;
+    max-width: 56rem;
     margin: 0 auto;
 }
 
 .header {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin: 4rem 0 5rem 0;
+    margin: 4rem 2rem 5rem 2rem;
+
+    @include respond (30.95em) {
+        flex-direction: column;
+    }
+}
+
+.main {
+    margin: 0 2rem 0 2rem;
+}
+
+.game-info {
+    margin: 0 2rem 0 2rem;
 }
