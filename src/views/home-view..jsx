@@ -115,7 +115,7 @@ export default function HomeView() {
         setTimeout(() => {
             document.removeEventListener('keydown', preventScroll);
             document.addEventListener('keydown', handleKeyPress)
-        }, 450)
+        }, 600)
     }
 
     function onKeyLeft(gameBoard) {
@@ -242,6 +242,8 @@ export default function HomeView() {
             updateNewTileData(newTileOne);
             setNewTileAnimation(1);
 
+            updateValues(matrixValues);
+
             setTimeout(() => {
                 setNewTileAnimation(2);
             }, 100)
@@ -252,10 +254,9 @@ export default function HomeView() {
             }, 1000)
 
             setTimeout(() => {
-                updateValues(matrixValues);
                 updateMergeData(matrixMerge);
                 setCurrentScore(prevState => prevState + score);
-            }, 0)
+            }, 1)
 
             setTimeout(() => {
                 setEndAnimation(true);
