@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function GameBlock({ value, rowIndex, columnIndex, translateData, translateDirection, mergeData, newTileData, endAnimation, newTileAnimation }) {
 
     const translate = [translateData[rowIndex][columnIndex], translateDirection];
@@ -47,14 +45,13 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         translate[0] = translate[0] * -1;
     }
 
-    console.log(newTileData);
 
-    if (newTileData[rowIndex][columnIndex] > 0 && !newTileAnimation) {
+    if (newTileData[rowIndex][columnIndex] > 0 && newTileAnimation == 1) {
         scale = 0;
         transition = '0s';
     }
 
-    else if (newTileData[rowIndex][columnIndex] > 0 && newTileAnimation) {
+    else if (newTileData[rowIndex][columnIndex] > 0 && newTileAnimation == 2) {
         scale = 1;
         transition = '0.1s';
     }

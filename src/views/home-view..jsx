@@ -63,18 +63,24 @@ export default function HomeView() {
     const newGame = () => {
         let newGame = Array.from(Array(4), () => Array(4).fill(0));
         setCurrentScore(0);
-        generateNewTile(newGame);
-        const newTileData = generateNewTile(newGame);
+
+        let newTileData = Array.from(Array(4), () => Array(4).fill(0));
+        let newTileOne = generateNewTile(newGame);
+        let newTileTwo = generateNewTile(newGame);
+
+        newTileData[newTileOne[0]][newTileOne[1]] = 1;
+        newTileData[newTileTwo[0]][newTileTwo[1]] = 1;
+
         updateNewTileData(newTileData);
-        setNewTileAnimation(false);
+        setNewTileAnimation(1);
         updateValues(newGame);
 
         setTimeout(() => {
-            setNewTileAnimation(true);
+            setNewTileAnimation(2);
         }, 100)
 
         setTimeout(() => {
-            setNewTileAnimation(false);
+            setNewTileAnimation(0);
             setNewTileData(Array.from(Array(4), () => Array(4).fill(0)));
         }, 1000)
     }
@@ -225,14 +231,28 @@ export default function HomeView() {
     function updateGame(matrixValues, matrixTransValues, matrixMerge, score) {
 
         updateTrans(matrixTransValues);
+        setNewTileData(Array.from(Array(4), () => Array(4).fill(0)));
 
         setTimeout(() => {
 
             updateTrans(Array.from(Array(4), () => Array(4).fill(0)));
-            generateNewTile(matrixValues);
-            updateValues(matrixValues);
+            let newTileCoords = generateNewTile(matrixValues);
+            let newTileOne = Array.from(Array(4), () => Array(4).fill(0));
+            newTileOne[newTileCoords[0]][newTileCoords[1]] = 1;
+            updateNewTileData(newTileOne);
+            setNewTileAnimation(1);
 
             setTimeout(() => {
+                setNewTileAnimation(2);
+            }, 100)
+    
+            setTimeout(() => {
+                setNewTileAnimation(0);
+                setNewTileData(Array.from(Array(4), () => Array(4).fill(0)));
+            }, 1000)
+
+            setTimeout(() => {
+                updateValues(matrixValues);
                 updateMergeData(matrixMerge);
                 setCurrentScore(prevState => prevState + score);
             }, 0)
@@ -284,7 +304,7 @@ export default function HomeView() {
     }
 
     function updateNewTileData(gameBoard) {
-        let updatedGame = [...gameMatrix];
+        let updatedGame = [...gameBoard];
         for (let i=0; i < gameBoard.length; i++) {
             for (let j=0; j <gameBoard[i].length; j++) {
                 updatedGame[i][j] = gameBoard[i][j]; 
