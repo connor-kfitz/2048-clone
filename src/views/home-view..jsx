@@ -39,6 +39,8 @@ export default function HomeView() {
 
     const firstRender = useRef(true);
 
+    const boardSquares = 16;
+
     useEffect(() => {
         if (!firstRender.current) {
             saveCurrentScore();
@@ -411,6 +413,9 @@ export default function HomeView() {
                         translateDirection={translateDirection} newTileData={newTileData} key={key} mergeData={mergeData} 
                         endAnimation={endAnimation} newTileAnimation={newTileAnimation}/>
                     ))}
+                    <div className="grid-background">
+                        {Array.from({ length: boardSquares }, (_, i) => <div className="game-background" key={i}></div>)}
+                    </div>
                 </div>
             </main>
             <GameInfo/>

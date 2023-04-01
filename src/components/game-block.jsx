@@ -6,6 +6,11 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
     var scale = 1;
     var color = '#776e65';
     var backgroundColor = '#eee4da';
+    var translateDistance = 12.75;
+
+    if (window.outerWidth <= 560) {
+        translateDistance = (window.outerWidth - 40 - 8 - 1) / 40;
+    }
 
     setColor();
 
@@ -66,7 +71,6 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         fontWeight: 'bold',
         lineHeight: '1',
         height: '100%',
-        fontSize: '5.5rem',
         borderRadius: '.3rem'
     }
     const inactiveBlockStyle = {
@@ -78,7 +82,7 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
     }
 
     const moveBlock = {
-        transform: `translate${axis}(${translate[0] * 12.75}rem)
+        transform: `translate${axis}(${translate[0] * translateDistance}rem)
                     scale(${scale})`,
         transition: transition,
     }
