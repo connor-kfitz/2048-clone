@@ -219,6 +219,39 @@
     }
 }
 
+.game-over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(238, 228, 218, 0.73);
+
+    &__title {
+        font-size: 6rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+    }
+
+    &__button {
+        background-color: $button-color;
+        font-weight: bold;
+        font-size: 2rem;
+        color: #fff;
+        outline: none;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: .4rem;
+        cursor: pointer;
+        max-height: 4.5rem;
+    }
+}
+
 .game-block {
     position: relative;
     z-index: 10;

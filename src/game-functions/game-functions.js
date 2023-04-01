@@ -158,7 +158,6 @@ export function generateNewTile(gameBoard) {
 }
 
 export function checkBoard(gameBoard) {
-
     for (let i=0; i < gameBoard.length; i++) {
         for (let j=0; j < gameBoard[i].length; j++) {
             if (gameBoard[i][j] == 0) { 

@@ -37,6 +37,8 @@ export default function HomeView() {
 
     const [highScore, setHighScore] = useState(0);
 
+    const [gameOver, setGameOver] = useState(false);
+
     const firstRender = useRef(true);
 
     const boardSquares = 16;
@@ -76,6 +78,7 @@ export default function HomeView() {
         updateNewTileData(newTileData);
         setNewTileAnimation(1);
         updateValues(newGame);
+        setGameOver(false);
 
         setTimeout(() => {
             setNewTileAnimation(2);
@@ -146,11 +149,11 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
+                setGameOver(true);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
         } else { 
-
             setTranslateDirection('horizontal');
             updateGame(matrixValues, matrixTransValues, matrixMerge, score);
         }
@@ -177,6 +180,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
+                setGameOver(true);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -201,6 +205,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
+                setGameOver(true);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -231,6 +236,7 @@ export default function HomeView() {
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
+                setGameOver(true);
             }
         } else if (compareState(matrixValues, matrixOriginal)) {
             console.log('Invalid Move')
@@ -464,6 +470,12 @@ function handleTouchMove(evt) {
     yDown = null;                                             
 };
 
+function restartGame() {
+    setGameOver(false);
+    newGame();
+
+}
+
     return (
         <div className="home" >
             <Header currentScore={currentScore} highScore={highScore} newGame={newGame}/>
@@ -477,6 +489,11 @@ function handleTouchMove(evt) {
                     <div className="grid-background">
                         {Array.from({ length: boardSquares }, (_, i) => <div className="game-background" key={i}></div>)}
                     </div>
+                    {gameOver ? 
+                    <div className="game-over">
+                        <div className="game-over__title">Game over!</div>
+                        <button className="game-over__button" onClick={restartGame}>Try Again</button>
+                    </div> : null}
                 </div>
             </main>
             <GameInfo/>
