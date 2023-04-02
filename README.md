@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# 2048 Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Link
 
-## Available Scripts
+http://connor-kfitz.github.io/2048-clone
 
-In the project directory, you can run:
+## Description
 
-### `npm start`
+The goal of this project was to create a copy of the popular game 2048 for web and mobile.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Development
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Stage 1: Game Function
 
-### `npm test`
+The first step in developing this application was getting the game state to function. I created a 2d nested array to represent the board, and connected the state to some HTML elements. Using the useEffect hook, I initialized  the keyboard events for the arrow keys.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To implement the block updates with each keypress, I decided to break up the movements into two parts. Focusing on left and right movements, I used logic to move the number blocks to the respective direction.  From here I merged the matching blocks together, and updated their value.
 
-### `npm run build`
+Once left and right movements were done, up and down was very simple to add.  I used the exact same functionality, but rotated the matrix before and after to mimic the change in direction.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Stage 2: Web Design & Styling
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Now that the game was working as intended, I elected to style it to match the original.  I changed some of the footer information to match myself, and acredit the original developer.  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Stage 3: Animations
 
-### `npm run eject`
+Animations proved to be the most difficult part of developing this app. First were the transition animation and merge animations, as the game did not feel complete without them. Breaking the game function up into translation and merge data made separating the two much easier. I decided to add two more states to the game, representing this data. The translation data array would contain information on which blocks to move, and the amount of blocks to move by, while the merge data simply displayed which blocks to merge. Lastly, another matrix was used to represent new tile animation data. This was done very similarily to the merge data, using different scale values.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Stage 4: Responsiveness & Touch Events
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Now that the game was complete, I wanted to make the app responsive. I diverted from how the original app responded to screen resize as I found it too basic. Touch events for mobile were added at the end, as this is originally a mobile app.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Outcomes
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Lots of challenges are learning from the four stages above. The first big issue I ran into was with state immutability, as before this project I was not familiar with the concept. I was very confused as to why my matrices were being transformed when running them through functions, without explicitly returning anything. Learning how to make deep copies overcame these issues, as I was able to store my matrices at various states.
 
-## Learn More
+Another large challenge I encountered was with transitions. Making them was not too difficult, but implementing them using the useEffect hook was challenging.  I opted to just use timeouts to manage things, but feel I should revisit this project and incorporate useEffect better.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Overall, this project was a success as I learned a lot that can be applied going forward. Probably going to take a break from making games for a bit, but will definitely make another in the future.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Pictures
 
-### Code Splitting
+### Desktop
+![Desgin Width - 1440px](./images/1440.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Mobile
+![Mobile Width - 375px](./images/375.png)
