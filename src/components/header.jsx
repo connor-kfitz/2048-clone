@@ -2,7 +2,6 @@ export default function Header( { currentScore, highScore, newGame } ) {
 
     return (
         <header className="header">
-
             <div className="info-cont">
                 <span className="info-cont__title">2048</span>
                 <div className="info-cont__text">
@@ -11,7 +10,6 @@ export default function Header( { currentScore, highScore, newGame } ) {
                     <a className="info-cont__rules-link" href="#rules">How to play →</a>
                 </div>
             </div>
-
             <div className="score-cont">
                 <div className="score-cont__current-score">
                         <span className="score-cont__score-title">SCORE</span>
@@ -23,8 +21,6 @@ export default function Header( { currentScore, highScore, newGame } ) {
                 </div>
                 <button className="score-cont__new-game-button" onClick={newGame}>New Game</button>
             </div>
-            
-
         </header>
     )
 }

@@ -1,7 +1,6 @@
 export default function GameInfo() {
 
     return (
-
         <div className="game-info">
             <section className="rules-section">
                 <span className="rules-section__text-bold" id="rules">HOW TO PLAY: </span>

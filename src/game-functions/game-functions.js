@@ -1,21 +1,17 @@
 export function addIndices(gameBoard) {
-
     for(let i=0; i < gameBoard.length; i++) {
         for(let j=0; j < gameBoard[i].length; j++) {
             gameBoard[i][j] = [gameBoard[i][j], j];
         }
     }
-
 }
 
 export function removeIndices(gameBoard, matrixValues) {
-
     for (let i=0; i < gameBoard.length; i++) {
         for(let j=0; j < gameBoard[i].length; j++) {
             matrixValues[i][j] = gameBoard[i][j][0]
         }
     }
-
 }
 
 export function rotate(matrix, direction) {
@@ -33,7 +29,6 @@ export function rotate(matrix, direction) {
             }
         }
     }
-
     else if (direction === 'counterClockwise'){
         for (let i=0; i<n/2; i++) {
             for (let j=i; j<n-i-1; j++) {
@@ -45,7 +40,6 @@ export function rotate(matrix, direction) {
             }
         }
     }
-
 }
 
 export function removeZeroTiles(row, direction) {
@@ -58,7 +52,6 @@ export function removeZeroTiles(row, direction) {
             }
         }
     }
-
     else if (direction == 'left') {
         for (let i=row.length - 1; i >= 0; i--) {
             if (row[i][0] == 0) {
@@ -67,7 +60,6 @@ export function removeZeroTiles(row, direction) {
             }
         }
     }
-
 }
 
 export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge) {
@@ -102,7 +94,6 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
             }
         }
     }
-
     else if (direction == 'left') {
         for (let i=0; i < gameBoard.length; i++) {
             removeZeroTiles(gameBoard[i], 'left') ;
@@ -114,7 +105,6 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
             }
 
             for (let j=0; j < gameBoard[i].length - 1; j++) {
-
                 if (gameBoard[i][j][0] > 0 && gameBoard[i][j][0] == gameBoard[i][j+1][0]) {
                     matrixTransValues[i][gameBoard[i][j+1][1]] += -1;
                     let k = 2;
@@ -122,7 +112,6 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
                         matrixTransValues[i][gameBoard[i][j+k][1]] += -1;
                         k++
                     }
-
                     gameBoard[i][j][0] = gameBoard[i][j][0] * 2
                     score += gameBoard[i][j][0];
                     matrixMerge[i][j] = 1;
@@ -134,7 +123,6 @@ export function mergeTiles(gameBoard, matrixTransValues, direction, matrixMerge)
     }
 
     return score;
-
 }
 
 
@@ -150,14 +138,13 @@ export function generateNewTile(gameBoard) {
     }
 
     let newTileIndex = Math.floor(Math.random() * zeroIndices.length)
-
     gameBoard[zeroIndices[newTileIndex][0]][zeroIndices[newTileIndex][1]] = 2;
 
     return zeroIndices[newTileIndex];
-
 }
 
 export function checkBoard(gameBoard) {
+
     for (let i=0; i < gameBoard.length; i++) {
         for (let j=0; j < gameBoard[i].length; j++) {
             if (gameBoard[i][j] == 0) { 
@@ -171,8 +158,6 @@ export function checkBoard(gameBoard) {
 
 export function checkGameOver(gameBoard) {
     
-    console.log('Check Game Over');
-
     for (let i=0; i < gameBoard.length; i++) {
         for (let j=0; j < gameBoard[i].length; j++) {
             if (i < gameBoard.length - 1 && j < gameBoard[i].length - 1) {
@@ -196,8 +181,6 @@ export function checkGameOver(gameBoard) {
         }
     }
 
-    console.log('Game Over!');
-
     return true;
 }
 
@@ -210,5 +193,4 @@ export function compareState(matrixOne, matrixTwo) {
     }
 
     return true;
-    
 }

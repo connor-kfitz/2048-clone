@@ -8,11 +8,8 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
     var backgroundColor = '#eee4da';
     var translateDistance = 12.75;
 
-    if (window.outerWidth <= 560) {
-        translateDistance = (window.outerWidth - 40 - 8 - 1) / 40;
-    }
-
     setColor();
+    updateTranslationConstant();
 
     function setColor() {
         if (value == 4) {backgroundColor = '#ede0c8'}
@@ -27,21 +24,20 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         else if (value == 2048) {backgroundColor = '#edc22d'}
         if (value >= 8) {color = '#fff'}
     }
+
+    // Change translation constant so blocks properly on browser resize
+    function updateTranslationConstant() {
+        if (window.outerWidth <= 560) {
+            translateDistance = (window.outerWidth - 40 - 8 - 1) / 40;
+        }
+    }
     
-    if (translateData[rowIndex][columnIndex] == 0 ) {
+    // Set transition duration to 0 for all stationary blocks
+    if (translateData[rowIndex][columnIndex] == 0) {
         transition = '0s';
     }
 
-    if(endAnimation) {
-        var transition = '.1s';
-    }
-
-    if(mergeData[rowIndex][columnIndex] == 1) {
-        scale = 1.2;
-        transition = '.1s';
-        
-    }
-
+    // Set translation direction for blocks
     if (translate[1] == 'horizontal') {
         axis = 'X';
         
@@ -50,7 +46,18 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         translate[0] = translate[0] * -1;
     }
 
+    // Set new animation time for merging blocks
+    if(endAnimation) {
+        var transition = '.1s';
+    }
 
+    // Animate merging blocks
+    if(mergeData[rowIndex][columnIndex] == 1) {
+        scale = 1.2;
+        transition = '.1s';
+    }
+
+    // New tile animation
     if (newTileData[rowIndex][columnIndex] > 0 && newTileAnimation == 1) {
         scale = 0;
         transition = '0s';
@@ -61,7 +68,6 @@ export default function GameBlock({ value, rowIndex, columnIndex, translateData,
         transition = '0.1s';
     }
 
-    
     const activeBlockStyle = {
         display: 'flex',
         justifyContent: 'center',

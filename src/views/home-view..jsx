@@ -41,7 +41,24 @@ export default function HomeView() {
 
     const firstRender = useRef(true);
 
-    const boardSquares = 16;
+    const boardSquares = gameMatrix.length * gameMatrix[0].length;
+
+    // Initalize game and event listeners
+    useEffect(() => {
+
+        loadLocalStorage();
+        document.addEventListener('keydown', handleKeyPress)
+
+        var gameBoard = document.getElementById('game-container');
+        gameBoard.addEventListener('touchstart', handleTouchStart, false);        
+        gameBoard.addEventListener('touchmove', handleTouchMove, false);
+
+
+        setTimeout(() => {
+            firstRender.current = false;
+        }, 1000)
+
+    }, []);
 
     useEffect(() => {
         if (!firstRender.current) {
@@ -97,23 +114,20 @@ export default function HomeView() {
         if(event.keyCode == 37){
             onKeyLeft(gameMatrix);
         } 
-        
         else if(event.keyCode == 38) {
             event.preventDefault();
             onKeyUp(gameMatrix);
         } 
-        
         else if(event.keyCode == 39) {
             onKeyRight(gameMatrix);
         } 
-        
         else if(event.keyCode == 40) {
             event.preventDefault();
             onKeyDown(gameMatrix);
         }
-
     }
 
+    // Lock keyboard & touchscreen between animation events
     function lockKeyboard() {
         document.removeEventListener('keydown', handleKeyPress);
         document.addEventListener('keydown', preventScroll);
@@ -122,7 +136,6 @@ export default function HomeView() {
         var gameBoard = document.getElementById('game-container');
         gameBoard.removeEventListener('touchstart', handleTouchStart, false);        
         gameBoard.removeEventListener('touchmove', handleTouchMove, false);
-
 
         setTimeout(() => {
             document.removeEventListener('keydown', preventScroll);
@@ -212,7 +225,6 @@ export default function HomeView() {
         } else { 
             setTranslateDirection('horizontal');
             updateGame(matrixValues, matrixTransValues, matrixMerge, score);
-
         }
     }
 
@@ -232,7 +244,6 @@ export default function HomeView() {
         rotate(matrixTransValues, 'counterClockwise');
         rotate(matrixMerge, 'counterClockwise');
 
-
         if (checkBoard(matrixValues) === true) {
             console.log('Full Board');
             if (checkGameOver(matrixValues)) {
@@ -243,7 +254,6 @@ export default function HomeView() {
         } else { 
             setTranslateDirection('vertical');
             updateGame(matrixValues, matrixTransValues, matrixMerge, score);
-
         }
     }
 
@@ -253,14 +263,12 @@ export default function HomeView() {
         setNewTileData(Array.from(Array(4), () => Array(4).fill(0)));
 
         setTimeout(() => {
-
             updateTrans(Array.from(Array(4), () => Array(4).fill(0)));
             let newTileCoords = generateNewTile(matrixValues);
             let newTileOne = Array.from(Array(4), () => Array(4).fill(0));
             newTileOne[newTileCoords[0]][newTileCoords[1]] = 1;
             updateNewTileData(newTileOne);
             setNewTileAnimation(1);
-
             updateValues(matrixValues);
 
             setTimeout(() => {
@@ -284,14 +292,15 @@ export default function HomeView() {
                 setTimeout(() => {
                     setEndAnimation(false);
                 }, 100)
-
             }, 100)
-
         }, 250)
     }
 
+    // All update functions are required to update nested array states
     function updateValues(gameBoard) {
+
         let updatedGame = [...gameMatrix];
+
         for (let i=0; i < gameBoard.length; i++) {
             for (let j=0; j <gameBoard[i].length; j++) {
                 updatedGame[i][j] = gameBoard[i][j]; 
@@ -302,7 +311,9 @@ export default function HomeView() {
     }
 
     function updateTrans(input) {
+
         let updatedGame = [...input];
+
         for (let i=0; i < input.length; i++) {
             for (let j=0; j <input[i].length; j++) {
                 updatedGame[i][j] = input[i][j];
@@ -313,7 +324,9 @@ export default function HomeView() {
     }
 
     function updateMergeData(input) {
+
         let updatedGame = [...input];
+
         for (let i=0; i < input.length; i++) {
             for (let j=0; j <input[i].length; j++) {
                 updatedGame[i][j] = input[i][j];
@@ -324,7 +337,9 @@ export default function HomeView() {
     }
 
     function updateNewTileData(gameBoard) {
+
         let updatedGame = [...gameBoard];
+
         for (let i=0; i < gameBoard.length; i++) {
             for (let j=0; j <gameBoard[i].length; j++) {
                 updatedGame[i][j] = gameBoard[i][j]; 
@@ -334,6 +349,7 @@ export default function HomeView() {
         setNewTileData(updatedGame);
     }
 
+    // Disables scrolling when using keyboard keys
     function preventScroll(event) {
 
         if(event.keyCode == 38) {
@@ -344,13 +360,15 @@ export default function HomeView() {
         }
     }
 
+    // If available, load any saved data from local storage
     function loadLocalStorage() {
+
         const gameData = localStorage.getItem("gameData");
         const board = ('gameData', JSON.parse(gameData)).board;
         const currentScore = ('gameData', JSON.parse(gameData)).score;
         const highScore = ('gameData', JSON.parse(gameData)).highScore;
-
         let tracker = 0;
+
         for (let i=0; i < board.length; i++) {
             for (let j=0; j < board[i].length; j++) {
                 tracker += board[i][j];
@@ -364,10 +382,11 @@ export default function HomeView() {
         } else {
             newGame();
         }
-
     }
 
+    // All save functions save game data to local storage after each move
     function saveBoard() {
+
         const gameData = localStorage.getItem("gameData");
         const currentScore = ('gameData', JSON.parse(gameData)).score;
         const highScore = ('gameData', JSON.parse(gameData)).highScore;
@@ -382,6 +401,7 @@ export default function HomeView() {
     }
 
     function saveCurrentScore() {
+
         const gameData = localStorage.getItem("gameData");
         const board = ('gameData', JSON.parse(gameData)).board;
         const highScore = ('gameData', JSON.parse(gameData)).highScore;
@@ -396,6 +416,7 @@ export default function HomeView() {
     }
 
     function saveHighScore() {
+
         const gameData = localStorage.getItem("gameData");
         const board = ('gameData', JSON.parse(gameData)).board;
         const currentScore = ('gameData', JSON.parse(gameData)).score;
@@ -409,77 +430,60 @@ export default function HomeView() {
         localStorage.setItem('gameData', JSON.stringify(currentGameData));
     }
 
-    useEffect(() => {
-
-        loadLocalStorage();
-        document.addEventListener('keydown', handleKeyPress)
-
-        var gameBoard = document.getElementById('game-container');
-        gameBoard.addEventListener('touchstart', handleTouchStart, false);        
-        gameBoard.addEventListener('touchmove', handleTouchMove, false);
-
-
-        setTimeout(() => {
-            firstRender.current = false;
-        }, 1000)
-
-    }, []);
-
+    // Handle slide events for mobile
     var xDown = null;                                                        
-var yDown = null;
+    var yDown = null;
 
-function getTouches(evt) {
-  return evt.touches ||             // browser API
-         evt.originalEvent.touches; // jQuery
-}                                                     
+    function getTouches(evt) {
+        return evt.touches
+    }                                                     
+                                                                            
+    function handleTouchStart(evt) {
+        const firstTouch = getTouches(evt)[0];                                      
+        xDown = firstTouch.clientX;                                      
+        yDown = firstTouch.clientY;                                      
+    };                                                
                                                                          
-function handleTouchStart(evt) {
-    const firstTouch = getTouches(evt)[0];                                      
-    xDown = firstTouch.clientX;                                      
-    yDown = firstTouch.clientY;                                      
-};                                                
-                                                                         
-function handleTouchMove(evt) {
-    if ( ! xDown || ! yDown ) {
-        return;
-    }
+    function handleTouchMove(evt) {
+        if ( ! xDown || ! yDown ) {
+            return;
+        }
 
-    var xUp = evt.touches[0].clientX;                                    
-    var yUp = evt.touches[0].clientY;
+        var xUp = evt.touches[0].clientX;                                    
+        var yUp = evt.touches[0].clientY;
 
-    var xDiff = xDown - xUp;
-    var yDiff = yDown - yUp;
-                                                                         
-    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-        if ( xDiff > 0 ) {
-            onKeyLeft(gameMatrix);
+        var xDiff = xDown - xUp;
+        var yDiff = yDown - yUp;
+                                                                            
+        if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+            if ( xDiff > 0 ) {
+                onKeyLeft(gameMatrix);
+            } else {
+                onKeyRight(gameMatrix);
+            }                       
         } else {
-            onKeyRight(gameMatrix);
-        }                       
-    } else {
-        if ( yDiff > 0 ) {
-            onKeyUp(gameMatrix);
-        } else { 
-            onKeyDown(gameMatrix);
-        }                                                                 
+            if ( yDiff > 0 ) {
+                onKeyUp(gameMatrix);
+            } else { 
+                onKeyDown(gameMatrix);
+            }                                                                 
+        }
+
+        lockKeyboard();
+        xDown = null;
+        yDown = null;                                             
+    };
+
+    // Restart on game end
+    function restartGame() {
+        setGameOver(false);
+        newGame();
     }
-
-    lockKeyboard();
-    /* reset values */
-    xDown = null;
-    yDown = null;                                             
-};
-
-function restartGame() {
-    setGameOver(false);
-    newGame();
-
-}
 
     return (
         <div className="home" >
             <Header currentScore={currentScore} highScore={highScore} newGame={newGame}/>
-            <main className="main">
+            <main className="game">
                 <div className="game-container" id="game-container">
                     {gameMatrix.map((row, key) => (
                         <Row row={row} rowIndex={key} translateData={translateData} 
