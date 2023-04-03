@@ -364,23 +364,36 @@ export default function HomeView() {
     function loadLocalStorage() {
 
         const gameData = localStorage.getItem("gameData");
-        const board = ('gameData', JSON.parse(gameData)).board;
-        const currentScore = ('gameData', JSON.parse(gameData)).score;
-        const highScore = ('gameData', JSON.parse(gameData)).highScore;
-        let tracker = 0;
 
-        for (let i=0; i < board.length; i++) {
-            for (let j=0; j < board[i].length; j++) {
-                tracker += board[i][j];
+        if (gameData) {
+            const board = ('gameData', JSON.parse(gameData)).board;
+            const currentScore = ('gameData', JSON.parse(gameData)).score;
+            const highScore = ('gameData', JSON.parse(gameData)).highScore;
+    
+            let tracker = 0;
+
+            for (let i=0; i < board.length; i++) {
+                for (let j=0; j < board[i].length; j++) {
+                    tracker += board[i][j];
+                }
             }
-        }
 
-        if (tracker > 0) {
-            updateValues(board);
-            setCurrentScore(currentScore);
-            setHighScore(highScore);
+            if (tracker > 0) {
+                updateValues(board);
+                setCurrentScore(currentScore);
+                setHighScore(highScore);
+            }
         } else {
+            const currentGameData = {
+                board: gameMatrix,
+                score: 0,
+                highScore: 0
+            }
+    
+            localStorage.setItem('gameData', JSON.stringify(currentGameData));
             newGame();
+            setCurrentScore(0)
+            setHighScore(0);
         }
     }
 
